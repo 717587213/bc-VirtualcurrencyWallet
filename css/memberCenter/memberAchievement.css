@@ -1,0 +1,56 @@
+.achievementList{
+	margin: 0 0.625rem;
+	margin-top: 1.2rem ;
+}
+.profit{
+	color: #235697;
+	font-family: "PF-Medium";
+	text-align: center;
+}
+.profitAll{
+	margin-top: 1.725rem;
+	width: 100%;
+	height: 1.5rem;
+	line-height: 1.5rem;
+	font-size:1.5rem;
+	font-family: "PF-Blod";
+}
+.profitAll-d{
+	font-size: 0.5rem;
+}
+.profitToday{
+	margin-top: 1.1rem;
+	width: 100%;
+	height: 0.8rem;
+	line-height: 0.8rem;
+	font-size: 0.8rem;
+}
+.profitToday-r{
+	color: #fb2a4a;
+}
+.profitToday-r-d{
+	font-size: 0.55rem;
+}
+.profitUse{
+	margin-top: 1.45rem;
+	width: 100%;
+	font-size: 0.7rem;
+}
+.m-table{
+	width: 100%;
+	color: rgb(204,204,204);
+	font-size: 0.575rem;
+	font-family: "PF-Regular";
+	text-align:center;
+	border-collapse:separate; 
+	border-spacing:0 0.45rem;
+}
+.m-th{
+	height: 1.25rem;
+	color: #313131;
+}
+.m-tr-content{
+	height: 1.25rem;
+	color: #5c6164;
+	background: #E6E6E6;
+}

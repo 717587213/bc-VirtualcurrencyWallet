@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>财务明细</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/financialCenter/financialDetail.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('f9')"></div>
+		</header>
+		<article class="flex-con flex-overflow m-List">
+			<table class="m-table">
+				<tr class="m-th">
+					<th v-text="getText('LDate')"></th>
+					<th v-text="getText('LType')"></th>
+					<th v-text="getText('LNumber')"></th>
+					<th></th>
+				</tr>
+				<tr class="m-tr-content" v-for="(item,index) in list">
+					<th v-text="item.dateStr"></th>
+					<th v-if="cutType(item.serviceType)==1" v-text="getText('LPF')"></th>
+					<th v-if="cutType(item.serviceType)==2" v-text="getText('LR')"></th>
+					<th v-text="item.coinNum"></th>
+					<th>
+						<span class="m-tr-content-btn" v-if="cutType(item.serviceType)==1" v-text="getText('LPutForward')"></span>
+						<span class="m-tr-content-btn" v-if="cutType(item.serviceType)==2" v-text="getText('LRecharge')"></span>
+					</th>	
+				</tr>
+			</table>
+		</article>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+			timeIndex:1,
+			number:'',
+			list:[]
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				this.languageType=Language.getLanguageType();
+				var nameSpace='getFinanceDetailByUserId';
+				ToolUI.showProgress();
+	        	ToolWebRequests.ajaxGet(nameSpace,this.initCallback);
+			},
+			initCallback:function(status,res){
+				if(status){
+					ToolUI.hideProgress();
+	        		vm.list=res.data;
+				}
+			},
+			cutType:function(int){
+				var s=int.toString().substring(0,1);
+				return s;
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+	};
+</script>
+
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>财务中心</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/financialCenter/financialCenter.css"/>
+	<style type="text/css">
+		.aui-popup-arrow{
+			background-image:linear-gradient(45deg, #001534, #001534 50%, transparent 50%)
+		}
+		.aui-popup-content{
+			background: #001534;
+			min-height: 0;
+		}
+		.list-item{
+			height: 1.75rem;
+			color: #fafafa;
+			text-align: center;
+			padding-left: 0.625rem;
+			padding-right: 0.625rem;
+		}
+		.aui-mask{
+			background: none;
+		}
+		.list-item span{
+			width: 100%;
+			height: 1.7rem;
+			line-height: 1.7rem;
+			border-bottom: 0.05rem solid #113567;
+			font-size: 0.7rem;
+			font-family: "PF-Medium";
+		}
+		.m-h-55{
+			height: 2.375rem;
+		}
+	</style>
+</head>	
+<body>
+	<div class="flex-vertical" id="app">
+		<article class="userInfo">
+			<div class="flex-vertical">
+				<span class="m-h-240 m-w-all">
+					<img class="userImg" :src="userImg" @click="setHeadPic"/>
+				</span>
+				<span class="m-h-55 m-w-all" @click="openWin('wallet')">
+					<label class="label-top aui-col-xs-12" v-text="getText('f1')"></label>
+					<table class="m-table">
+						<tr>
+							<th class="label-bottom" v-text="userQRCode"></th>
+							<th class="QRCode"></th>
+						</tr>
+					</table>
+				</span>
+				<div class="flex-horizontal">
+					<span class="userAssets aui-col-xs-4">
+						<label class="userAssets-l-t m-w-all" v-text="getText('f2')"></label>
+						<label class="userAssets-l-b m-w-all">
+			    			<font>{{coinTotal|fnI}}<font class="userAssets-l-b-d">{{coinTotal|fnD}}</font></font>
+						</label>
+					</span>
+					<label class="division"></label>
+					<span class="userAssets aui-col-xs-4">
+						<label class="userAssets-l-t m-w-all" v-text="getText('f3')"></label>
+						<label class="userAssets-l-b m-w-all">
+			    			<font>{{coinFree|fnI}}<font class="userAssets-l-b-d">{{coinFree|fnD}}</font></font>
+						</label>
+					</span>
+					<label class="division"></label>
+					<span class="userAssets aui-col-xs-4">
+						<label class="userAssets-l-t m-w-all" v-text="getText('f4')"></label>
+						<label class="userAssets-l-b m-w-all">
+			    			<font>{{coinInOrder|fnI}}<font class="userAssets-l-b-d">{{coinInOrder|fnD}}</font></font>
+						</label>
+					</span>
+				</div>
+			</div>
+		</article>
+		<article class="flex-con">
+			<div class="flex-horizontal m-h-240 m-w-all">
+				<span class="userExtension aui-col-xs-6" @click="openWin('extensionDetail')">
+					<label class="userExtension-l-t m-w-all" v-text="getText('f5')"></label>
+					<label class="userExtension-l-b m-w-all">
+			    		<font>{{coinSpread|fnI}}<font class="userExtension-l-b-d">{{coinSpread|fnD}}</font></font>
+					</label>
+				</span>
+				<label class="division1"></label>
+				<span class="userExtension aui-col-xs-6" @click="openWin('extensionDetail')">
+					<label class="userExtension-l-t m-w-all" v-text="getText('f6')"></label>
+					<label class="userExtension-l-b m-w-all" v-text="userNum"></label>
+				</span>				
+			</div>
+			<div class="user-btn-list">
+				<ul class="">
+					<li class="user-btn p-btn" @click="openWin('chooseCashed')" v-text="getText('f7')"></li>
+					<li class="user-btn p-btn" @click="openWin('extensionDetail')" v-text="getText('f8')"></li>
+					<li class="user-btn p-btn" @click="openWin('financialDetail')" v-text="getText('f9')"></li>
+				</ul>
+			</div>
+		</article>
+		<div class="aui-popup aui-popup-top-right" id="top-right" style="display: none;">
+		    <div class="aui-popup-arrow"></div>
+		    <div class="aui-popup-content">
+		        <ul class="aui-list aui-list-noborder">
+		            <li class="list-item" v-if="isLogin">
+		            	<span @click="openWin('changePsw')" v-text="getText('f10')"></span>
+		            </li>
+		            <li class="list-item" v-if="isLogin">
+		            	<span @click="openWin('bindingPhone')" v-text="getText('f11')"></span>
+		            </li>
+		            <!--<li class="list-item" v-if="isLogin">
+		            	<span @click="openWin('bindingEmail')" v-text="getText('f12')"></span>
+		            </li>
+		            <li class="list-item">
+		            	<span @click="openOtherWin('../setting/changeLanguage')" v-text="getText('f13')"></span>
+		            </li>-->
+		            <li class="list-item">
+		            	<span  @click="openOtherWin('../setting/aboutUs')" v-text="getText('f14')"></span>
+		            </li>
+		            <li class="list-item" v-if="isLogin">
+		            	<span style="border: none;" @click="loginOut()" v-text="getText('f15')"></span>
+		            </li>
+		        </ul>
+		    </div>
+		</div>
+		<!--<footer class="footer1" v-if="!isLogin">
+			<div class="footer_bg"></div>
+			<div class="isLogin flex-horizontal">
+				<span class="aui-col-xs-6">
+					<label class="user-btn-l" @click="openRegisterWin()" v-text="getText('register')"></label>
+				</span>
+				<span class="aui-col-xs-6">
+					<label class="user-btn-r" @click="openLoginWin()" v-text="getText('login')"></label>
+				</span>
+			</div>
+		</footer>-->
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js"></script>
+<script type="text/javascript" src="../../script/aui/aui-popup.js"></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+	    el: '#app',
+	    data: {	 
+	    	isLogin:false,
+	    	languageType:'CN',
+	        userImg:'../../image/icon_logo.png',
+	        userQRCode:'0x759406F02292C7FDD458888888888',
+	        userQRCodeImg:'',
+	        coinTotal: 0,//总资产
+	        coinFree: 0,//可用余额
+	        coinInOrder: 0,//锁仓金额
+	        userNum:0,
+	        coinSpread:0,
+	        setUserImg:''
+	    },
+	    methods: {
+	        init:function(){
+	        	this.languageType=Language.getLanguageType();
+	        	vm.isLogin=true;
+	        	if(vm.isLogin){
+	        		this.initHeadPic();
+		        	this.initFCInfo();
+	        	}else{
+	        		//置空操作
+	        		this.userImg='../../image/icon_logo.png';
+			        this.userQRCode='0x759406F02292C7FDD458888888888';
+			        this.coinTotal= 0;
+			        this.coinFree= 0;
+			        this.coinInOrder= 0;
+			        this.userNum=0;
+			        this.coinSpread=0;
+	        	}
+	        },
+	        initHeadPic:function(){	        	
+	        	var headPic=Tools.getLocal('headPic');
+	        	if(ToolCheck.isDefine(headPic)){
+	        		console.log('有自定头像');
+	        		this.userImg=headPic;
+	        	}else{
+	        		console.log('无自定义头像');
+	        		this.userImg='../../image/icon_logo.png';
+	        	}
+	        },
+	        initFCInfo:function(){
+        		var nameSpace='getFinanceCenterInfo';
+        		ToolUI.showProgress();
+        		ToolWebRequests.ajaxGet(nameSpace,this.initFCInfoCallback);
+	        },
+	        initFCInfoCallback:function(status,res){
+	        	ToolUI.hideProgress();
+	        	var data=res.data;
+	        	if(status){
+	        		//钱包信息
+	        		vm.userQRCode=data.account;
+	        		vm.userQRCodeImg=data.accountImg;
+	        		//资产相关
+	        		vm.coinTotal=data.coinTotalPrice;
+		        	vm.coinFree=data.coinFree;
+		        	vm.coinInOrder=data.coinInOrder;
+		        	//推广相关
+		        	vm.userNum=data.recomendedNum;
+		        	vm.coinSpread=data.coinRecommendIncome;
+	        	}
+	        },
+	        setHeadPic:function(){
+	        	vm.isLogin=ToolCheck.isLogin();
+	        	if(vm.isLogin){
+		        	api.getPicture({
+					    sourceType: 'album',
+					    mediaValue: 'pic',
+					    destinationType: 'base64',
+					    quality: 50,
+					}, function(ret, err) {
+					    if (ret) {
+					    	if(ToolCheck.isDefine(ret.base64Data)){
+					    		var base64=ret.base64Data;
+						    	vm.setUserImg=ret.base64Data;
+						    	var nameSpace='user/updateHeadPic';
+						    	var serviceData={
+						    		headPic:base64
+						    	}
+						    	ToolUI.showProgress(vm.getText('uploading'));
+		        				ToolWebRequests.ajaxPost(nameSpace,serviceData,vm.setHeadPicCallback);
+					    	}
+					    } else {
+					        console.log(JSON.stringify(err));
+					    }
+					});
+				}
+	        },
+	        setHeadPicCallback:function(status,res){
+	        	ToolUI.hideProgress();
+	        	if(status){
+	        		vm.userImg=vm.setUserImg;
+	        		Tools.setLocal('headPic',vm.setUserImg);
+	        	}else{
+	        		Tools.alertFormat(vm.languageType,res);
+//	        		alert(res.msg);
+	        	}
+	        },
+	        openWin:function(url){
+	        	hidePopup();
+	        	if(vm.isLogin){
+	        		if(url=='wallet'){
+	        			var param={
+	        				userQRCode:this.userQRCode,
+	        				userQRCodeImg:this.userQRCodeImg
+	        			}
+	        			ToolWin.openWin(url,param);
+	        		}else{
+	        			ToolWin.openWin(url,'');
+	        		}
+	        	}else{
+	        		this.openLoginWin();
+	        	}
+	        },
+	        openOtherWin:function(url){
+	        	hidePopup();
+	        	ToolWin.openWin(url,'');
+	        },
+	        openLoginWin:function(){
+	        	var url='../main/login';
+	        	ToolWin.openWin(url,'');
+	        },
+	        openRegisterWin:function(){
+	        	var url='../main/register';
+	        	ToolWin.openWin(url,'');
+	        },
+	        loginOut:function(){
+	        	hidePopup();
+	        	Tools.setLocal('loginType',false);
+	        	Tools.setLocal('userQQ',null);
+				Tools.setLocal('userMobile',null);
+				Tools.setLocal('userWeChat',null);
+				Tools.setLocal('userEmail',null);
+				Tools.setLocal('userId',null);
+				Tools.setLocal('token',null);
+				Tools.setLocal('userName',null);
+				Tools.setLocal('headPic',null);
+	        	Tools.BroadRefreshData();
+	        	ToolWin.execScript('','',"vm.backNoLogin()");
+	        },
+	        changeLanguage:function(){
+				vm.languageType=Language.getLanguageType();
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			}
+	   },
+	   filters:{
+			fnI:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var i=v;
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					i=strs[0].toString();
+				}
+				return i;
+			},
+			fnD:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var d='.00';
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					d='.'+strs[1].toString();
+				}
+				if(d.length>2){
+					d=d.substring(0,3);
+				}
+				return d;
+			}
+		}
+	});
+	apiready = function() {
+		vm.init();
+		Tools.ListenerChangeLanguage(vm.changeLanguage);
+		Tools.ListenerRefreshData(vm.init);
+	};
+	var popup = new auiPopup();
+    function showPopup(){
+		popup.show(document.getElementById("top-right"));
+    }
+    function hidePopup(){
+    	popup.hide(document.getElementById("top-right"));
+    }
+    document.body.addEventListener('touchstart', function () {}); 
+</script>
+</html>

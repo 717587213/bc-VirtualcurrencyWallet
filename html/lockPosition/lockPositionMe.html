@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>我要锁仓</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/lockPosition/lockPositionMe.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title">我要锁仓</div>
+		</header>
+		<div class="aui-content flex-con">
+			<ul class="m-list">
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title">可用余额：</label>
+					<label class="m-content" v-text="coinFree"></label>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title">锁仓时间：</label>
+					<div class="m-content aui-col-3">
+						<label :class="[timeIndex==1?'timeActive':'','time']" @click="changeTime(1)" style="margin-left: 0;">24H</label>
+						<span :class="[timeIndex==2?'timeActive':'','time']" @click="changeTime(2)">7天</span>
+						<span :class="[timeIndex==3?'timeActive':'','time']" @click="changeTime(3)">1季度</span>
+						<span :class="[timeIndex==4?'timeActive':'','time']" @click="changeTime(4)">半年</span>
+					</div>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title">锁仓收益：</label>
+					<label class="m-content" v-text="profit"></label>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title">锁仓数量：</label>
+					<span class="m-content">
+						<input type="text" placeholder="请输入锁仓数量" v-model="number"/>
+					</span>
+			    </li>
+			    <li class="user-btn-list">
+					<span class="user-btn" @click="lockPosition">确认锁仓</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			timeIndex:1,
+			number:'',
+			coinFree:0,
+			profit:0
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+			},
+			changeTime:function(index){
+				this.timeIndex=index;
+				this.calculateProfit();
+			},
+			calculateProfit:function(){
+				if(ToolCheck.isRealNum(this.number)){
+					var nameSpace='expectIncome?coinNum='+this.number+'&itemId='+this.timeIndex;
+					ToolWebRequests.ajaxGet(nameSpace,this.calculateProfitCallback);
+				}
+			},
+			calculateProfitCallback:function(status,res){
+				var data=res.data;
+				if(status){
+					this.profit=data;
+				}
+			},
+			lockPosition:function(){
+				if(this.number>this.coinFree){
+					alert('锁仓数量应小于等于您的可用余额');
+				}else{
+					var nameSpace='item/buy';
+					var serviceData={
+						'coinNum':vm.number,
+						'itemId':vm.timeIndex
+					}
+					ToolUI.showProgress();
+					ToolWebRequests.ajaxPost(nameSpace,serviceData,this.lockPositionCallback);
+				}
+			},
+			lockPositionCallback:function(status,res){
+				ToolUI.hideProgress();
+				var data=res.data;
+				if(status){
+					ToolUI.toast(res.msg);
+					//发送广播使各页面执行刷新操作
+					Tools.BroadRefreshData();
+					ToolWin.closeWin();
+				}else{
+					alert(res.msg);
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+		watch: {
+			number: {
+			    handler: function (val, oldVal) {
+			    	console.log('val='+val);
+			    	if(ToolCheck.isRealNum(this.number)){
+			    		vm.calculateProfit();
+			    	}else{
+			    		vm.profit=0;
+			    	}
+			    },
+			    deep: true
+			}
+		}
+	});
+	apiready = function() {
+		vm.init();
+		vm.coinFree=api.pageParam.coinFree;
+	};
+</script>
+
+</html>

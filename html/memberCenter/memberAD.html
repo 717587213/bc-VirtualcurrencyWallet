@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>社区业绩详情</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/memberCenter/memberAchievement.css"/>
+</head>
+<style>
+	.profitT{
+		padding-top: 1rem;
+		font-size: 0.7rem;
+	}
+	.profitT-d{
+		font-size: 0.45rem
+	}
+</style>
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="title"></div>
+		</header>
+		<article class="profit flex-vertical">
+			<span class="profitAll">
+				<font>{{getText('CFTotal')}}<font>{{total|fnI}}<font class="profitAll-d">{{total|fnD}}</font></font></font>
+			</span>
+			<span class="profitToday">
+				<label class="profitToday-l" v-text="getText('CFToday')"></label>
+				<label class="profitToday-r">
+					<font>{{today|fnI}}<font class="profitToday-r-d">{{today|fnD}}</font></font>
+				</label>
+			</span>
+			<span class="profitT flex-horizontal">
+				<label class="aui-col-xs-6">
+					<font>{{getText('coinReleasedT')}}<font>{{coinReleasedT|fnI}}<font class="profitAll-d">{{coinReleasedT|fnD}}</font></font></font>
+				</label>
+				<label class="aui-col-xs-6">
+					<font>{{getText('coinInOrderT')}}<font>{{coinInOrderT|fnI}}<font class="profitAll-d">{{coinInOrderT|fnD}}</font></font></font>
+				</label>
+			</span>
+		</article>
+		<article class="flex-con flex-overflow achievementList">
+			<table class="m-table">
+				<tr class="m-th">
+					<th v-text="getText('LName')"></th>
+					<th v-text="getText('LStarLevel')"></th>
+					<th v-text="getText('LDate')"></th>
+					<th v-text="getText('LNumber')"></th>
+					<th v-text="getText('LProfit')"></th>
+				</tr>
+				<tr class="m-tr-content" v-for="(item,index) in list">
+					<th v-text="item.userName"></th>
+					<th v-text="item.level"></th>
+					<th v-text="item.createDateStr"></th>
+					<th>
+						<font>{{item.coinInOrder|fnI}}<font>{{item.coinInOrder|fnD}}</font></font>
+					</th>
+					<th>
+						<font>{{item.totalIncome|fnI}}<font>{{item.totalIncome|fnD}}</font></font>
+					</th>
+				</tr>
+			</table>
+		</article>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		type:'',
+		data: {
+			title:'',
+			languageType:'CN',
+			total:0,
+			today:0,
+			coinInOrderT:0,
+			coinReleasedT:0,
+			list:[]
+		},
+		methods: {
+			init: function() {
+				this.languageType=Language.getLanguageType();
+				this.initList(vm.type);
+			},
+			initList:function(type){
+				var nameSpace='';
+				if(type=='leftA'){
+					vm.title=vm.getText('sharedCAT');
+					nameSpace='getCommunityPerfDetail?leftOrRight=0';
+				}else if(type=='rightA'){
+					vm.title=vm.getText('sharingCAT');
+					nameSpace='getCommunityPerfDetail?leftOrRight=1';
+				}
+				ToolUI.showProgress();
+				ToolWebRequests.ajaxGet(nameSpace,this.initListCallBack);
+			},
+			initListCallBack:function(status,res){
+				var data=res.data;
+				if(status){
+					this.total=data.zongSuanli;
+					this.today=data.zongSuanliToday;
+					this.coinReleasedT=data.keyongSuanli;
+					this.coinInOrderT=data.chiyouSuanli;
+					this.list=data.list;
+				}else{
+					Tools.alertFormat(vm.languageType,res);
+//					alert(res.msg);
+				}
+				ToolUI.hideProgress();
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+		filters:{
+			fnI:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var i=v;
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					i=strs[0].toString();
+				}
+				return i;
+			},
+			fnD:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var d='.00';
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					d='.'+strs[1].toString();
+				}
+				if(d.length>2){
+					d=d.substring(0,3);
+				}
+				return d;
+			}
+		}
+	});
+	apiready = function() {
+		//设置沉浸式菜单栏
+		ToolUI.setHeader();
+		vm.type=api.pageParam.type;
+		vm.init();
+	};
+</script>
+
+</html>

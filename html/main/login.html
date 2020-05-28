@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>登录</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/main/login.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('login')"></div>
+		</header>
+		<div class="aui-content flex-con flex-overflow">
+			<ul class="m-list">
+				<li class="bg_nft"></li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title">+86</label>
+			        <label class="division"></label>
+					<label class="m-content">
+						<input id="phone" type="text" placeholder="请输入手机号" v-model="mobile"/>
+					</label>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			    	<span class="m-content">
+						<input id="code" type="text" placeholder="请输入动态验证码" v-model="verCode"/>
+					</span>
+					<span class="m-content-r-btn" @click="getCode()" v-text="btnText"></span>
+			    </li>
+			    <li class="user-btn-list">
+					<span class="user-btn p-btn" @click="login" v-text="getText('login')"></span>
+				</li>
+				<li class="m-w-all">
+					<label class="u-text" v-text="getText('loginP')"></label>
+				</li>
+				<!--<li class="flex-horizontal m-w-all m-list-b">
+					<span class="aui-col-xs-6">
+						<span class="m-w-all icon-wechat"></span>
+						<label class="m-w-all m-text" v-text="getText('loginWechat')"></label>
+					</span>
+					<span class="aui-col-xs-6">
+						<span class="m-w-all icon-qq"></span>
+						<label class="m-w-all m-text" v-text="getText('loginQQ')"></label>
+					</span>
+				</li>-->
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+	    	languageType:'CN',
+			mobile:'',
+			verCode:'',
+			btnText:'获取验证码',
+			btnType:1
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				this.languageType=Language.getLanguageType();
+				this.btnText=this.getText('bd1');
+				$('#phone').attr('placeholder',vm.getText('bp2'));
+				$('#code').attr('placeholder',vm.getText('bd4'));
+			},
+			getCode:function(){
+				var check=ToolCheck.isMobileNumber(vm.mobile);
+				if(check.type){
+					//获取验证码使能
+					if(vm.btnType){
+						var nameSpace='msg/mobile/code';
+						var serviceData={
+							mobile:vm.mobile
+						}
+						ToolWebRequests.ajaxPost(nameSpace,serviceData,this.getCodeCallback);
+					}
+				}else{
+					Tools.alertFormat(vm.languageType,check);
+				}
+			},
+			getCodeCallback:function(status,res){
+				if(status){
+					settime();
+				}
+			},
+			login:function(){
+				var check=ToolCheck.isMobileNumber(vm.mobile);
+				if(check.type){
+					if(ToolCheck.isDefine(vm.verCode)){
+						var language='0';
+						if(vm.languageType=='EN'){
+							language='1';
+						}
+						var nameSpace='user/login';
+						var serviceData={
+							"mobile":vm.mobile,
+							"msgCode":vm.verCode,
+							"language":language
+						}
+						ToolUI.openProgress();
+						ToolWebRequests.ajaxPost(nameSpace,serviceData,this.loginCallback);
+					}else{
+//						alert(vm.getText('bd4'));
+						Tools.alertFormat(null,vm.getText('bd4'));
+					}
+				}else{
+					Tools.alertFormat(vm.languageType,check);
+				}
+			},
+			loginCallback:function(status,res){
+				ToolUI.closeProgress();
+				var data=res.data;
+				if(status){
+					//缓存用户数据
+					Tools.setLocal('loginType',true);
+					Tools.setLocal('userQQ',data.qq);
+					Tools.setLocal('userMobile',data.mobile);
+					Tools.setLocal('userWeChat',data.weChat);
+					Tools.setLocal('userEmail',data.email);
+					Tools.setLocal('userId',data.userId);
+					Tools.setLocal('token',data.token);
+					Tools.setLocal('userName',data.userName);
+					Tools.setLocal('headPic',data.headPic);
+					Tools.setLocal('fuli',data.fuli);
+					//发送广播使各页面执行刷新操作
+					Tools.BroadRefreshData();
+					ToolWin.closeWin();
+				}else{
+//					if(res.code==402){
+//						//此处表示用户未注册，提示用户是否注册
+//						var title=vm.getText('login402');
+//						var msg=vm.getText('registerNow');
+//						var btnY=vm.getText('registerY');
+//						var btnN=vm.getText('registerN');
+//						api.confirm({
+//						    title: title,
+//						    msg: msg,
+//						    buttons: [btnY, btnN]
+//						}, function(ret, err) {
+//						    var index = ret.buttonIndex;
+//						    if(index==1){
+//						    	ToolWin.openWin('register');
+//						    }
+//						});
+//					}else{
+						Tools.alertFormat(vm.languageType,res);
+//					}
+				}
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+	};
+	var countdown=60;
+	settime=function() {
+		if (countdown == 0) {
+			vm.btnText=vm.getText('bd1');
+			vm.btnType=1;
+			countdown=60;
+		} else { 
+			vm.btnText=vm.getText('bd2')+'(' + countdown + ')'; 
+			vm.btnType=0;
+			countdown--; 
+			setTimeout(function() { 
+				settime() 
+			},1000)
+		}
+	}
+	document.body.addEventListener('touchstart', function () {}); 
+</script>
+
+</html>

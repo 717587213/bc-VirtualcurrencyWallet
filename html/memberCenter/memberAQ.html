@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>业绩查询</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/memberCenter/memberCenter.css"/>
+</head>  
+<style>
+	.m-l{
+		background: #235697;
+	}
+	.m-l:active{
+		background: #235697;
+	}
+	.l-t{
+		color: #FFFFFF;
+	}
+	.l-b{
+		color: #FFFFFF;
+	}
+</style>
+<body>
+	<div class="flex-vertical" id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('mc2')"></div>
+		</header>
+		<div class="flex-horizontal m-l m-l-t-36">
+			<span class="aui-col-xs-6" @click="openAchievementWin('leftA')">
+				<label class="l-t" v-text="getText('sharedCAT')"></label>
+				<label class="l-b">
+					<font>{{achievementLeft|fnI}}<font class="l-b-d">{{achievementLeft|fnD}}</font></font>
+				</label>
+			</span>
+			<label class="division"></label>
+			<span class="aui-col-xs-6" @click="openAchievementWin('rightA')">
+				<label class="l-t" v-text="getText('sharingCAT')"></label>
+				<label class="l-b">
+					<font>{{achievementRight|fnI}}<font class="l-b-d">{{achievementRight|fnD}}</font></font>
+				</label>
+			</span>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+	    el: '#app',
+	    data: {
+	    	languageType:'CN',
+	    	achievementRight: 0,//右区业绩
+	        achievementLeft: 0,//左区业绩	    	
+	    },
+	    methods: {
+	        init:function(){
+	        	//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				this.languageType=Language.getLanguageType();
+				
+				var nameSpace='getSharedCommunityPerf';
+				ToolUI.showProgress();
+				ToolWebRequests.ajaxGet(nameSpace,this.initCallback);
+	        },
+	        initCallback:function(status,res){
+	        	ToolUI.hideProgress();
+	        	var data=res.data;
+	        	if(status){
+	        		this.achievementRight=data.rightSharedCommunityPerf;
+	        		this.achievementLeft=data.leftSharedCommunityPerf;
+	        	}
+	        },
+	        openAchievementWin:function(type){
+        		var url='memberAD';
+	        	var params={
+		        	type:type
+		        }
+	        	ToolWin.openWin(url,params);
+	        },
+	        getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+	   },
+	   filters:{
+			fnI:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var i=v;
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					i=strs[0].toString();
+				}
+				return i;
+			},
+			fnD:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var d='.00';
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					d='.'+strs[1].toString();
+				}
+				if(d.length>2){
+					d=d.substring(0,3);
+				}
+				return d;
+			}
+		}
+	});
+	apiready = function() {
+		vm.init();
+		Tools.ListenerRefreshData(vm.init);
+	};
+</script>
+</html>

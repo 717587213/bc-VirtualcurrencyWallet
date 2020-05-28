@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>修改密码</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/financialCenter/cashed.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('cpt')"></div>
+		</header>
+		<div class="aui-content flex-con">
+			<ul class="m-list">
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title" v-text="getText('cp1')"></label>
+					<label class="m-content">
+						<input id="opsw" type="password" placeholder="请输入原始密码" v-model="oPsw"/>
+					</label>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title" v-text="getText('cp2')"></label>
+					<span class="m-content">
+						<input id="npsw" type="password" placeholder="请输入新密码" v-model="nPsw"/>
+					</span>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title" v-text="getText('cp3')"></label>
+					<span class="m-content">
+						<input id="cnpsw" type="password" placeholder="请再次输入新密码" v-model="cnPsw"/>
+					</span>
+			    </li>
+			    <li class="user-btn-list">
+					<span class="user-btn p-btn" @click="changePsw" v-text="getText('cp7')"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+			oPsw:'',
+			nPsw:'',
+			cnPsw:''
+		},
+		methods: {
+			init: function() {
+				this.languageType=Language.getLanguageType();
+				$('#opsw').attr('placeholder',vm.getText('cp4'));
+				$('#npsw').attr('placeholder',vm.getText('cp5'));
+				$('#cnpsw').attr('placeholder',vm.getText('cp6'));
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+			},
+			changePsw:function(){
+				if(ToolCheck.isDefine(vm.oPsw)){
+					if(ToolCheck.isDefine(vm.nPsw)){
+						if(ToolCheck.isDefine(vm.cnPsw)){
+							if(vm.nPsw==vm.cnPsw){
+								var nameSpace='user/editDealPassword';
+								var serviceData={
+									"oldPassword": vm.oPsw,//旧密码
+								    "newPassword": vm.nPsw,//新密码
+								    "newPasswordAgain": vm.cnPsw//新密码重复
+								}
+								ToolUI.openProgress(vm.getText('Revising'));
+								ToolWebRequests.ajaxPost(nameSpace,serviceData,this.changePswCallback);
+							}else{
+								Tools.alertFormat(null,vm.getText('cp8'));
+//								alert(vm.getText('cp8'));
+							}
+						}else{
+							Tools.alertFormat(null,vm.getText('cp6'));
+//							alert(vm.getText('cp6'));
+						}
+					}else{
+						Tools.alertFormat(null,vm.getText('cp5'));
+//						alert(vm.getText('cp5'));
+					}
+				}else{
+					Tools.alertFormat(null,vm.getText('cp4'));
+//					alert(vm.getText('cp4'));
+				}
+			},
+			changePswCallback:function(status,res){
+				ToolUI.closeProgress();
+				if(status){
+					Tools.alertFormat(vm.languageType,res);					
+//					alert(res.msg);
+				}else{
+					Tools.alertFormat(vm.languageType,res);
+//					alert(res.msg);
+				}
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+	};
+	document.body.addEventListener('touchstart', function () {}); 
+</script>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>钱包地址</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/financialCenter/wallet.css"/>
+</head>
+<style>
+	footer{
+		height: 6rem;
+		line-height: 2rem;
+		width: 100%;
+		color: #484c58;
+		font-size: 0.6rem;
+		font-family: "PF-Regular";
+		text-align: right;
+		padding-right: 1rem;
+	}
+</style>
+<body>
+	<div id="app" class="flex-vertical">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('wAddress')"></div>
+		</header>
+		<div class="aui-content flex-con">
+			<ul class="m-list">
+			    <li class="m-w-all">
+			        <img class="u-qrImg" :src="userQRCodeImg"></img>
+			    </li>
+			    <li class="m-w-all">
+			        <label id="foo" class="u-text" v-text="userQRCode"></label>
+			    </li>
+			    <li class="user-btn-list">
+					<button data-clipboard-target="#foo" id="copyBtn" class="user-btn" v-text="getText('wCopy')"></button>
+				</li>
+			</ul>
+		</div>
+		<!--<footer v-text="getText('wP')"></footer>-->
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript" src="../../script/clipboard.min.js" ></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+			userQRCode:'0x759406F02292C7FDD4589F9c2D9bc3674275E419',
+			userQRCodeImg:'',
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				this.languageType=Language.getLanguageType();
+				this.userQRCode=api.pageParam.userQRCode;
+				/**
+				 *点击复制钱包地址（之前的工程师的，有问题）
+				 * this.userQRCodeImg=api.pageParam.userQRCodeImg;
+				 * 	var clipboard = new ClipboardJS('#copyBtn', {
+				 *    text: function(trigger) {
+				 *      return vm.userQRCode;
+				 * 	}
+				 * });
+				 * clipboard.on('success', function(e) {
+				 * 		Tools.alertFormat(null,vm.getText('copyST'));
+				 * 		alert(vm.getText('copyST'));
+				 * 		console.log(e.text);
+				 * });
+				 * clipboard.on('error', function(e) {
+				 * console.log(e);
+				 * });
+				 */	   
+			    var FNScanner = api.require('FNScanner');
+				FNScanner.encodeImg({
+				    content: vm.userQRCode,
+				    saveToAlbum: false,
+				    saveImg: {
+				        path: 'fs://album.png',
+				        w: 200,
+				        h: 200
+				    }
+				}, function(ret, err) {
+				    if (ret.status) {
+				        vm.userQRCodeImg=ret.imgPath;
+				    } else {
+				        Tools.toastFormat(JSON.stringify(err));
+				    }
+				});
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+	};
+</script>
+
+
+<script type="text/javascript">
+/**
+ * 此script内容点击按钮复制钱包地址
+ */
+	;(function(){
+	var clipboard = new ClipboardJS('.user-btn');
+	clipboard.on('success', function(e) {
+		Tools.alertFormat(null,vm.getText('copyST'));
+//		alert(vm.getText('copyST'));
+		console.log(e.text);
+	
+	});
+	
+	clipboard.on('error', function(e) {
+	    console.error('Action:', e.action);
+	    console.error('Trigger:', e.trigger);
+	});
+	})();
+	
+</script>
+</html>

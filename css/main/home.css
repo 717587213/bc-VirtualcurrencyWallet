@@ -1,0 +1,147 @@
+.aui-content{
+	background: #f5f5f5;
+}
+.price{
+	height: 10rem;
+	background: #235697;
+	background: -webkit-linear-gradient(#235697,#15466e); 
+	background: -o-linear-gradient(#235697,#15466e); 
+	background: -moz-linear-gradient(#235697,#15466e); 
+	background: linear-gradient(#235697,#15466e);
+}
+.price-l span{
+	height: 3.925rem;
+	background: #FFFFFF;
+}
+.price-l{
+	margin-top: 0.25rem;
+	height: 4.125rem;
+}
+.price-l-t{
+	margin-top: 1rem;
+	width: 100%;
+	height:0.5rem;
+	line-height: 0.5rem;	
+	font-size: 1.4rem;
+	color: #235697;
+	text-align: center;
+	font-family: "PF-Light";
+}
+.price-l-b{
+	margin-top: 0.25rem;	
+	width: 100%;
+	height:1.25rem;
+	line-height: 1.25rem;
+	font-size: 0.6rem;
+	color: #323232;
+	text-align: center;
+	font-family: "PF-Medium";
+}
+.total{
+	height: 4.5rem;
+	background: #FFFFFF;
+	/*background: -webkit-linear-gradient(rgba(51,55,66,0.1),rgba(51,55,66,0.5)); 
+	background: -o-linear-gradient(rgba(51,55,66,0.1),rgba(51,55,66,0.5)); 
+	background: -moz-linear-gradient(rgba(51,55,66,0.1),rgba(51,55,66,0.5)); 
+	background: linear-gradient(rgba(51,55,66,0.1),rgba(51,55,66,0.5)); 
+	border-radius: 0.25rem;*/
+}
+.total span{
+	width: 100%;
+	height: 2.25rem;
+	line-height: 2.25rem;
+	color: #235697;
+	text-align: center;
+}
+.total-t{
+	width: 50%;
+	font-size: 0.75rem;
+	font-family: "PF-Heavy";
+	border-bottom: 0.05rem solid #e6e6e6;
+	/*text-shadow: 0  0  1rem  #57a1f9;*/
+}
+.total-b{
+	font-size: 0.5rem;
+	font-family: "PF-Medium";
+}
+.achievement{
+	height: 5.25rem;
+	margin: 0 0.5rem;
+	margin-top: 0.5rem;
+	text-align: center;
+}
+.achievement div{
+	height: 5.25rem;
+}
+.achievement-c{
+	width: 1rem;
+}
+.achievement-l,.achievement-r{
+	width: 100%;
+	background: #FFFFFF;
+}
+.achievement-l-t{
+	width: 100%;
+	height: 5.25rem;
+}
+.achievement-l-b{
+	width: 100%;
+	height: 2rem;
+	line-height: 2rem;
+	font-size: 0.5rem;
+	font-family: "PF-Light";
+	color: #57a1f9;
+}
+.achievement-t-label{
+	width: 100%;
+	height: 2.25rem;
+	line-height: 2.25rem;
+	color: #235697;
+	font-size: 1.05rem;
+	font-family: "PF-Light";
+}
+.achievement-t-span{
+	width: 100%;
+	height: 2rem;
+	line-height: 2rem;
+	color: #999999;
+	font-size: 0.6rem;
+	font-family: "PF-Bold";
+}
+.achievement-t-span label{
+	padding-left: 0.625rem;
+	text-align: left;
+}
+.achievement-t-span span{
+	width: 0.75rem;
+	height: 2rem;
+	background: url(../../image/icon_home_code.png) no-repeat center;
+	background-size: 0.55rem;
+	margin-right: 0.625rem;
+}
+#aui-slide{
+	width: 100%;
+	height: 10rem;
+	margin-top: 0.75rem;
+}
+.login-btn{
+	width: 6.875rem;
+	height: 2rem;
+	background: url(../../image/btn_login.png) no-repeat center;
+	background-size: 6.875rem 2rem;
+	
+	position:relative;
+	overflow:hidden;
+	margin:auto;/*重要,IE兼容模式*/
+	top:50%;
+	left:50%;
+	margin-left:-3.4375rem;
+}
+.login-btn:active{
+	background: url(../../image/btn_login_a.png) no-repeat center;
+	background-size: 6.875rem 2rem;
+}
+.li_login{
+	width: 100%;
+	margin-top: 4rem;
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>平台公告</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/memberCenter/memberPB.css"/>
+</head>  
+<style>
+.aui-content{
+	width: 90%;
+	margin-left:5%;
+	margin-top:1rem;
+	line-height: 1.2rem;
+	padding: 0.2rem 0;
+	color: #596066;
+	font-size: 0.8rem;
+	font-family: "PF-Regular";
+}
+</style>
+<body>
+	<div class="flex-vertical" id="app" v-if="languageType=='EN'">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="title">Announcement</div>
+		</header>
+		<div class="aui-content">
+            
+		Dear client, TESO official ETH address is stated as below:
+
+0x008d482F5F73f75eA28B42d5cA5556EEFfd153A6
+
+Please make sure address that u  use is exactly the same as the address stated above! After transfer coin please screenshot the transaction record, send in member ID, registered phone number and the amount of TESO coin purchasing. Email to official email: service@tesoreum.net
+It will take 3 days working days to complete your registration. Thank you.
+		</div>
+	</div>
+	
+	
+	<div class="flex-vertical" id="app" v-if="languageType=='CN'">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="title">公告</div>
+		</header>
+		<div class="aui-content">
+		亲爱的用户，TESO官方以太坊合约（ETH）地址如下：
+
+0x008d482F5F73f75eA28B42d5cA5556EEFfd153A6
+
+请各位务必核对准确！
+转完币后，把您转币的截图，会员ID、注册的手机号及您要购买的TESO数量，发邮件至官方客服邮箱：service@tesoreum.net
+我们将在3个工作日内，处理您的订单！
+祝各位生活愉快！
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				//获取语言类型
+				this.languageType=Language.getLanguageType();
+				this.getText();
+				this.closeWin();
+			},
+			
+			//将获取的getLanguageType();赋值给this.data.languageType  
+			//再将this.data.languageType与页面的v-if做判断控制中英文显示与隐藏。
+			getText:function(key){
+				//初始化lt等于this.data.languageType
+				var lt=this.languageType;
+				//
+				if(lt=="CN"){
+					return this.languageType = 'CN';
+				}else if(lt=="EN"){
+					return this.languageType = 'EN';
+				}else{
+					return this.languageType = 'CN';
+				}
+			},
+			//点击header上的返回按钮，返回
+			closeWin:function(){
+				//ToolWin.closeWin();
+				api.closeWin();
+			}
+		}
+	});
+	apiready = function() {
+		vm.init();
+		
+	};
+</script>
+</html>

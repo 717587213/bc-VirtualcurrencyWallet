@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>会员中心</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/memberCenter/memberCenter.css"/>
+</head>  
+</head>
+<style>
+	.m-l{
+		height: 2.5rem;
+		line-height: 2.5rem;
+		margin-top: 0.25rem;
+	}
+	.m-l-t-36{
+		margin-top: 0.9rem;
+	}
+	.left{
+		width: 3.375rem;
+		height: 2.5rem;
+		background: url() no-repeat center;
+		background-size: 1.175rem;
+	}
+	.m1{
+		background-image: url(../../image/icon_mc1.png);
+	}
+	.m2{
+		background-image: url(../../image/icon_mc2.png);
+	}
+	.m3{
+		background-image: url(../../image/icon_mc3.png);
+	}
+	.m4{
+		background-image: url(../../image/icon_mc4.png);
+	}
+	.m5{
+		background-image: url(../../image/icon_mc5.png);
+	}
+	.m6{
+		background-image: url(../../image/icon_mc6.png);
+	}
+	.center{
+		font-size: 0.8rem;
+		font-family: "PF-Medium";
+		color: #727a7d;
+	}
+	.right{
+		width: 3rem;
+		height: 2.5rem;
+		background: url(../../image/icon_mcr.png) no-repeat center;
+		background-size: 0.35rem 0.625rem;
+	}
+</style>
+<body>
+	<div class="flex-vertical" id="app">
+		<div class="flex-horizontal m-l m-l-t-36" @click="openMCWin('memberMT')">
+			<span class="left m1"></span>
+			<label class="center flex-con" v-text="getText('mc1')"></label>
+			<span class="right"></span>
+		</div>
+		<div class="flex-horizontal m-l" @click="openMCWin('memberAQ')">
+			<span class="left m2"></span>
+			<label class="center flex-con" v-text="getText('mc2')"></label>
+			<span class="right"></span>
+		</div>
+		<!--<div class="flex-horizontal m-l" @click="openMCWin('memberCIS')">
+			<span class="left m3"></span>
+			<label class="center flex-con" v-text="getText('mc3')"></label>
+			<span class="right"></span>
+		</div>-->
+		<div class="flex-horizontal m-l" @click="openMCWin('memberPB')">
+			<span class="left m4"></span>
+			<label class="center flex-con" v-text="getText('mc4')"></label>
+			<span class="right"></span>
+		</div>
+		<!--<div class="flex-horizontal m-l" @click="openMCWin('memberII')">
+			<span class="left m5"></span>
+			<label class="center flex-con" v-text="getText('mc5')"></label>
+			<span class="right"></span>
+		</div>-->
+		<div class="flex-horizontal m-l" @click="openMCWin('memberCCS')">
+			<span class="left m6"></span>
+			<label class="center flex-con" v-text="getText('mc6')"></label>
+			<span class="right"></span>
+		</div>
+		<!--<footer class="footer1" v-if="!isLogin">
+			<div class="footer_bg"></div>
+			<div class="isLogin flex-horizontal">
+				<span class="aui-col-xs-6">
+					<label class="user-btn-l" @click="openWin('../main/register')" v-text="getText('register')">注册</label>
+				</span>
+				<span class="aui-col-xs-6">
+					<label class="user-btn-r" @click="openWin('../main/login')" v-text="getText('login')"></label>
+				</span>
+			</div>
+		</footer>-->
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+	    el: '#app',
+	    data: {
+	    	isLogin:false,
+	    	languageType:'CN',
+	    },
+	    methods: {
+	        init:function(){
+//	        	vm.isLogin=ToolCheck.isLogin();
+				vm.isLogin=true;
+				//获取语言类型赋值给this.languageType
+	        	this.languageType=Language.getLanguageType();
+	        },
+	        //点击页面中的列表，判断是否登录，如果登录，进入传入参数的地址，如果没有登录打开登录页面
+	        openMCWin:function(url){
+	        	if(vm.isLogin){
+	        		ToolWin.openWin(url);
+	        	}else{
+	        		ToolWin.openWin('../main/login');
+	        	}
+	        },
+	        //打开页面的方法
+	        openWin:function(url){
+	        	ToolWin.openWin(url);
+	        },
+	        //获取语言类型，并赋值给vm.languageType
+	        changeLanguage:function(){
+				vm.languageType=Language.getLanguageType();
+			},
+			//根据页面传入的参数以及获取的type的值，判断显示参数的值是英文还是中文
+	        getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			}
+	    }
+	});
+	
+	apiready = function() {
+		//当apiready初始化完成后，调用vm.init();
+		vm.init();
+		//获取全局广播的语言类型
+		Tools.ListenerChangeLanguage(vm.changeLanguage);
+		Tools.ListenerRefreshData(vm.init);
+	};
+	document.body.addEventListener('touchstart', function () {}); 
+</script>
+</html>

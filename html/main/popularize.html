@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>推广链接</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/main/popularize.css"/>
+</head>
+<body>
+	<div id="app" class="flex-vertical">
+		<header class="aui-bar aui-bar-nav" id="header">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="title"></div>
+			<!--<a class="aui-pull-right" @click="share">
+				<span class="aui-iconfont share"></span>
+			</a>-->
+		</header>
+		<div id="mt"></div>
+		<div id="content">
+			<ul class="m-list">
+				<li class="popularize" id="popularize">
+					<span class="m-w-all p-text" v-if="languageType=='CN'">
+						<font>我是<font class="special">{{userName}}</font>，我在玩<font class="special">{{coinType}}</font>数字资产理财， 
+    					持币生息+静态收益+复利+分享收益。<font class="special">{{coinType}}</font>已经上线国际交易平台<font class="special">{{platformName}}{{url}}</font>
+    					，只涨不跌，单边上扬，欢迎加入！扫描二维码进行注册，快来一起玩吧！</font>
+					</span>
+					<span class="m-w-all p-text" v-if="languageType=='EN'">
+						<font>I'm<font class="special">{{userName}}</font>,I am playing <font class="special">{{coinType}}</font> digital capital finance management, 
+    					Token holding interest bearing+Static income+compound interest+ interest by sharing.<font class="special">{{coinType}}</font>has already launched the international trading platform.<font class="special">{{platformName}}{{url}}</font>
+    					.Only rise and fall,single side up,welcome to join! Scan QR code to register!</font>
+					</span>
+					<span class="m-w-all p-img">
+						<span class="aui-col-xs-8 p-img-l"></span>
+						<img class="p-img-r" :src="urlImg"/>
+					</span>
+				</li>
+			</ul>
+		</div>
+		<div class="u-btn" @click="downImg" v-text="getText('clickKept')"></div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript" src="../../script/html2canvas.min.js"></script>
+<script type="text/javascript" src="../../script/Canvas2Image.js"></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+			type:'',
+			leftOrRight:0,
+			title:'推广链接',
+			coinType:'币种',
+			platformName:'平台名称',
+			url:'平台网址',
+			urlImg:'',
+			userName:'用户名'
+		},
+		methods: {
+			init: function() {
+				this.languageType=Language.getLanguageType();
+				this.userName=Tools.getLocal('userName');
+				this.type=api.pageParam.type;
+				if(this.type=='left'){
+					this.title=this.getText('sharedCAEL');
+					this.leftOrRight=0;
+				}else{
+					this.title=this.getText('sharingCAEL');
+					this.leftOrRight=1;
+				}
+				var nameSpace='setting/spreadUrlInfo?leftOrRight='+this.leftOrRight;
+				ToolUI.showProgress();
+				ToolWebRequests.ajaxGet(nameSpace,this.initCallback);
+			},
+			initCallback:function(status,res){
+				ToolUI.hideProgress();
+				var data=res.data;
+				if(status){
+					this.coinType=data.walletname;
+					this.platformName=data.platformName;
+					this.url=data.url;
+					var urlImg=data.urlImg;
+					var FNScanner = api.require('FNScanner');
+					FNScanner.encodeImg({
+					    content: urlImg,
+					    saveToAlbum: false,
+					    saveImg: {
+					        path: 'fs://album.png',
+					        w: 200,
+					        h: 200
+					    }
+					}, function(ret, err) {
+					    if (ret.status) {
+					        vm.urlImg=ret.imgPath;
+					    } else {
+					        Tools.toastFormat(JSON.stringify(err));
+					    }
+					});
+				}
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			},
+			share:function(){
+				//分享
+			},
+			downImg:function(){
+				ToolUI.showProgress(vm.getText('imgG'));
+				var w = $("#content").width();
+				var h = $("#content").height();
+				var h_h=$("#header").height();
+				var h_m=$("#mt").height();
+				//要将 canvas 的宽高设置成容器宽高的 2 倍
+				var canvas = document.createElement("canvas");
+				canvas.width = w * 2;
+				canvas.height = h * 2+h_h*4+h_m*4;
+				canvas.style.width = w/40+'rem';
+				canvas.style.height = h/40+'rem';
+				var context = canvas.getContext("2d");
+				//然后将画布缩放，将图像放大两倍画到画布上
+				context.scale(2,2);
+				html2canvas(document.getElementById("popularize"), { 
+					canvas: canvas,
+                    allowTaint: true,    
+                    taintTest: false,    
+                    onrendered: function(canvas) {
+                        //生成base64图片数据    
+                        var dataUrl = canvas.toDataURL();    
+                        var trans = api.require('trans');
+                        var path=dataUrl.replace('data:image/png;base64,','')
+                        var name=path.substring(0,10);
+						trans.saveImage({
+						    base64Str: path,
+						    album:true,
+						    imgPath:"fs://img/",
+    						imgName:name+".png"
+						}, function(ret, err) {
+						    if (ret.status) {
+						        ToolUI.hideProgress();
+						        ToolUI.toast(vm.getText('imgKS'))
+						    } else {
+//						        alert(vm.getText('imgGF'));
+			    				Tools.alertFormat(null,vm.getText('imgGF'));
+						        
+						    }
+						});	
+                    }    
+               }); 
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+		ToolUI.setHeader();
+	};
+</script>
+
+</html>

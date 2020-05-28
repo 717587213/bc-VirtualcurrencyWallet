@@ -1,0 +1,69 @@
+.aui-bar-nav,
+.aui-searchbar {
+	background:#235697;
+}
+.aui-bar-tab{
+	height:2.45rem;
+	background:#FFFFFF;
+}
+.aui-bar-tab .aui-bar-tab-label ,.aui-bar-tab-label-a{
+    font-size: 0.475rem;
+	font-family: "PF-Bold";
+}
+.aui-bar-tab-label{
+	color:#5a6265 ;
+}
+.aui-bar-tab-label-a{
+	color: #235697;
+}
+.aui-bar-tab-item{
+	height:2.325rem;
+}
+.aui-bar-tab .aui-bar-tab-item .aui-iconfont {
+	height: 1.5rem;
+	background-size: 1.25rem;
+}
+
+.aui-bar-nav .aui-pull-right{
+	padding: 0;
+	padding-right: 1.05rem;
+}
+.icon {
+	width: 1.2rem;
+	height: 1.125rem;
+}
+.set{
+	background: url(../../image/icon_set.png) no-repeat center right;
+	background-size: 0.9rem 0.85rem;
+}
+.home_active {
+	background: url(../../image/icon_home_a.png) no-repeat center;
+}
+
+.home {
+	background: url(../../image/icon_home.png) no-repeat center;
+}
+
+.lockPosition_active {
+	background: url(../../image/icon_lockPosition_a.png) no-repeat center;
+}
+
+.lockPosition {
+	background: url(../../image/icon_lockPosition.png) no-repeat center;
+}
+
+.memberCenter_active {
+	background: url(../../image/icon_memberCenter_a.png) no-repeat center;
+}
+
+.memberCenter {
+	background: url(../../image/icon_memberCenter.png) no-repeat center;
+}
+
+.financialCenter_active {
+	background: url(../../image/icon_financialCenter_a.png) no-repeat center;
+}
+
+.financialCenter {
+	background: url(../../image/icon_financialCenter.png) no-repeat center;
+}

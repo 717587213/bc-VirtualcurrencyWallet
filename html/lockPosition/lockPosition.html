@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>锁仓</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/lockPosition/lockPosition.css"/>
+</head>  
+</head>
+<body>
+	<div class="flex-vertical" id="app">
+		<div class="aui-bar aui-bar-btn aui-bar-btn-round m-tab" id="tab">
+		    <div class="aui-bar-btn-item aui-active" v-text="getText('CFPackage')"></div>
+		    <div class="aui-bar-btn-item" v-text="getText('CFDetail')"></div>
+		</div>
+		<div class="flex-horizontal balance" v-if="tabIndex==1&&isLogin">
+			<span class="aui-col-xs-6">
+			    <font>{{getText('CFAvailable')}}<font>{{CFAvailable|fnI}}<font class="balance_d">{{CFAvailable|fnD}}</font></font></font>
+			</span>
+			<span class="aui-col-xs-6">
+			    <font>{{getText('CFHave')}}<font>{{CFHave|fnI}}<font class="balance_d">{{CFHave|fnD}}</font></font></font>
+			</span>
+		</div>
+		<article class="flex-con aui-margin-t-15" v-if="tabIndex==1">
+			<ul class="userProfit">
+				<li class="flex-horizontal userProfit-l" v-for="(item,index) in itemList">
+					<span class="aui-col-xs-6 userProfit-l-l" v-text="item.name"></span>
+					<span class="aui-col-xs-6 userProfit-l-r">
+						<label class="userProfit-l-r-t" v-text="'锁仓收益：'+item.yieldRate+'%'"></label>
+						<label class="userProfit-l-r-b" v-if="isLogin" v-text="'已锁单数：'+item.orderNum"></label>
+						<label class="userProfit-l-r-b" v-else>已锁单数：0</label>
+					</span>	
+				</li>
+				<li class="flex-horizontal userProfit-l">
+					<span class="aui-col-xs-6 userProfit-l-l">
+						<label class="userProfit-l-l-t "v-text="getText('CFStar1')"></label>
+						<label class="userProfit-l-l-b">100-999</label>
+					</span>
+					<span class="aui-col-xs-6 userProfit-l-r">
+						<label class="userProfit-l-r-t star1"></label>
+						<label class="userProfit-l-r-b" v-text="getText('CFProfit')+'0.20'+getText('CFDPercentage')"></label>
+					</span>	
+				</li>
+				<li class="flex-horizontal userProfit-l">
+					<span class="aui-col-xs-6 userProfit-l-l">
+						<label class="userProfit-l-l-t "v-text="getText('CFStar2')"></label>
+						<label class="userProfit-l-l-b">1000-1999</label>
+					</span>
+					<span class="aui-col-xs-6 userProfit-l-r">
+						<label class="userProfit-l-r-t star2"></label>
+						<label class="userProfit-l-r-b" v-text="getText('CFProfit')+'0.25'+getText('CFDPercentage')"></label>
+					</span>	
+				</li>
+				<li class="flex-horizontal userProfit-l">
+					<span class="aui-col-xs-6 userProfit-l-l">
+						<label class="userProfit-l-l-t "v-text="getText('CFStar3')"></label>
+						<label class="userProfit-l-l-b">2000-2999</label>
+					</span>
+					<span class="aui-col-xs-6 userProfit-l-r">
+						<label class="userProfit-l-r-t star3"></label>
+						<label class="userProfit-l-r-b" v-text="getText('CFProfit')+'0.30'+getText('CFDPercentage')"></label>
+					</span>	
+				</li>
+				<li class="flex-horizontal userProfit-l">
+					<span class="aui-col-xs-6 userProfit-l-l">
+						<label class="userProfit-l-l-t "v-text="getText('CFStar4')"></label>
+						<label class="userProfit-l-l-b">3000-4999</label>
+					</span>
+					<span class="aui-col-xs-6 userProfit-l-r">
+						<label class="userProfit-l-r-t star4"></label>
+						<label class="userProfit-l-r-b" v-text="getText('CFProfit')+'0.35'+getText('CFDPercentage')"></label>
+					</span>	
+				</li>
+				<li class="flex-horizontal userProfit-l">
+					<span class="aui-col-xs-6 userProfit-l-l">
+						<label class="userProfit-l-l-t "v-text="getText('CFStar5')"></label>
+						<label class="userProfit-l-l-b" v-text="getText('CFStar5T')"></label>
+					</span>
+					<span class="aui-col-xs-6 userProfit-l-r">
+						<label class="userProfit-l-r-t star5"></label>
+						<label class="userProfit-l-r-b" v-text="getText('CFProfit')+'0.40'+getText('CFDPercentage')"></label>
+					</span>	
+				</li>
+			</ul>
+		</article>
+		<div class="prompt" v-if="tabIndex==1" v-text="getText('CFPrompt')"></div>
+		<article class="flex-con m-list" v-if="tabIndex==2">
+			<!--<table class="m-table">
+				<tr class="m-th">
+					<th v-text="getText('LDate')"></th>
+					<th v-text="getText('LCFIntelligence')"></th>
+					<th v-text="getText('LCFHold')"></th>
+					<th v-text="getText('LCFRecommend')"></th>
+					<th v-text="getText('LCFShare')"></th>
+					<th v-text="getText('LCFManage')"></th>
+					<th v-text="getText('LCFBonus')"></th>
+				</tr>
+				<tr class="m-tr-content" v-for="(item,index) in list">
+					<th v-text="item.date"></th>
+					<th v-text="item.intelligence"></th>
+					<th v-text="item.coinNum"></th>
+					<th v-text="item.recommend"></th>
+					<th v-text="item.shared"></th>
+					<th v-text="item.manager"></th>
+					<th v-text="item.bonus"></th>
+				</tr>
+			</table>-->
+			<div class="flex-vertical m-item flex-overflow" v-for="(item,index) in list">
+				<span class="m-w-all flex-horizontal">
+					<label class="m-item-l aui-col-xs-3">
+						<label v-text="getText('LDate')"></label>
+						<label v-text="item.date"></label>
+					</label>
+					<label class="m-item-l aui-col-xs-3">
+						<label v-text="getText('LCFIntelligence')"></label>
+						<label>
+							<font>{{item.intelligence|fnI}}<font>{{item.intelligence|fnD}}</font></font>
+						</label>
+					</label>
+					<label class="m-item-l aui-col-xs-3">
+						<label v-text="getText('LCFHold')"></label>
+						<label>
+							<font>{{item.coinNum|fnI}}<font>{{item.coinNum|fnD}}</font></font>
+						</label>
+					</label>
+					<label class="m-item-l aui-col-xs-3">
+						<label v-text="getText('LCFRecommend')"></label>
+						<label>
+							<font>{{item.recommend|fnI}}<font>{{item.recommend|fnD}}</font></font>
+						</label>
+					</label>
+				</span>
+				<span class="m-w-all flex-horizontal">
+					<label class="m-item-l aui-col-xs-3">
+					</label>
+					<label class="m-item-l aui-col-xs-3">
+						<label v-text="getText('LCFShare')"></label>
+						<label>
+							<font>{{item.shared|fnI}}<font>{{item.shared|fnD}}</font></font>
+						</label>
+					</label>
+					<label class="m-item-l aui-col-xs-3">
+						<label v-text="getText('LCFManage')"></label>
+						<label>
+							<font>{{item.manager|fnI}}<font>{{item.manager|fnD}}</font></font>
+						</label>
+					</label>
+					<label class="m-item-l aui-col-xs-3">
+						<label v-text="getText('LCFBonus')"></label>
+						<label>
+							<font>{{item.bonus|fnI}}<font>{{item.bonus|fnD}}</font></font>
+						</label>
+					</label>
+				</span>
+			</div>
+		</article>
+		<!--<footer class="footer1" v-if="!isLogin">
+			<div class="footer_bg"></div>
+			<div class="isLogin flex-horizontal">
+				<span class="aui-col-xs-6">
+					<label class="user-btn-l" @click="openWin('../main/register')" v-text="getText('register')"></label>
+				</span>
+				<span class="aui-col-xs-6">
+					<label class="user-btn-r" @click="openWin('../main/login')" v-text="getText('login')"></label>
+				</span>
+			</div>
+		</footer>-->
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/aui/aui-tab.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+	    el: '#app',
+	    data: {
+	    	languageType:'CN',
+	    	tabIndex:1,
+	    	isLogin:false,
+	    	CFAvailable:0,
+	    	CFHave:0,
+	    	orderNum:0,
+	    	itemList:[],
+	    	list:[]
+	    },
+	    methods: {
+	        init:function(){
+				this.languageType=Language.getLanguageType();
+	        	vm.isLogin=ToolCheck.isLogin();
+	        	if(vm.isLogin){
+		        	//获取算力
+		        	if(vm.tabIndex==1){
+							var nameSpace='getUableAndLastingHashRate';
+							ToolUI.showProgress();
+							ToolWebRequests.ajaxGet(nameSpace,this.initCFCallback);
+		        	}
+		        	//算力明细列表
+		        	else{
+	        			var nameSpace='getHashRateDetailList';
+	        			ToolUI.showProgress();
+	        			ToolWebRequests.ajaxGet(nameSpace,this.initOrderListCallback);
+	        		}
+	        	}
+	        },
+	        initCFCallback:function(status,res){
+	        	ToolUI.hideProgress();
+	        	var data=res.data;
+	        	if(status){
+	        		if(vm.isLogin){
+	        			this.CFAvailable=data.usableHashRate;
+	        			this.CFHave=data.lastingHashRate;
+	        		}
+	        	}
+	        },
+	        initOrderListCallback:function(status,res){
+	        	ToolUI.hideProgress();
+	        	var data=res.data;
+	        	if(status){
+	        		this.list=data;
+	        	}
+	        },
+	        changeLanguage:function(){
+				vm.languageType=Language.getLanguageType();
+			},
+	        getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+	        openWin:function(url){
+	        	var params={
+	        		coinFree:vm.coinFree
+	        	}
+	        	ToolWin.openWin(url,params);
+	        },
+	   },
+	   filters:{
+			fnI:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var i=v;
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					i=strs[0].toString();
+				}
+				return i;
+			},
+			fnD:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var d='.00';
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					d='.'+strs[1].toString();
+				}
+				if(d.length>2){
+					d=d.substring(0,3);
+				}
+				return d;
+			}
+		}
+	});
+	apiready = function() {
+		vm.init();
+		Tools.ListenerChangeLanguage(vm.changeLanguage);
+		Tools.ListenerRefreshData(vm.init);
+	};
+	var tab = new auiTab({
+        element:document.getElementById("tab"),
+        index:1,
+        repeatClick:false
+    },function(ret){
+        vm.tabIndex=ret.index;
+        vm.init();
+    });
+</script>
+</html>

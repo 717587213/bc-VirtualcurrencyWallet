@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>平台公告</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/memberCenter/memberPB.css"/>
+</head>  
+<body>
+	<div class="flex-vertical" id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('mc4')"></div>
+		</header>
+		<div class="flex-con flex-overflow">
+			<ul class="m-list">
+				<li class="m-l flex-vertical" v-for="(item,index) in list" @click="openDetailWin(index)">
+					<span class="top" v-text="item.tittle"></span>
+					<span class="center" v-text="item.content"></span>
+					<span class="bottom" v-text="item.createtime"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+	    el: '#app',
+	    data: {
+	    	languageType:'CN',
+	    	list:[],
+	    },
+	    methods: {
+	        init:function(){
+	        	//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				ToolUI.showProgress();
+				this.languageType=Language.getLanguageType();
+				var nameSpace='sysnotice/findlist';
+				ToolWebRequests.ajaxPost(nameSpace,'',this.initCallback);
+	        },
+	        initCallback:function(status,res){
+	        	ToolUI.hideProgress();
+	        	if(status){
+	        		vm.list=res.data;
+	        	}
+	        },
+	        openDetailWin:function(index){
+	        	var param={
+	        		data:vm.list[index]
+	        	}
+	        	ToolWin.openWin('memberDetail',param);
+	        },
+	        getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+	    }
+	});
+	apiready = function() {
+		vm.init();
+		Tools.ListenerRefreshData(vm.init);
+	};
+
+
+</script>
+</html>

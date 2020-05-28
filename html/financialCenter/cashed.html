@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>我要提现</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/financialCenter/cashed.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('wPF')">我要提现</div>
+		</header>
+		<div class="aui-content flex-con">
+			<ul class="m-list">
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title" v-text="getText('wPFN')+'：'"></label>
+					<span class="m-content">
+						<input id="num" type="text" placeholder="请输入提现数量" v-model="num"/>
+					</span>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title" v-text="getText('wAdr')+'：'"></label>
+					<span class="m-content">
+						<input id="adr" type="text" placeholder="请输入您的收款钱包地址" v-model="adr"/>
+					</span>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title" v-text="getText('wPSW')+'：'"></label>
+					<span class="m-content">
+						<input id="psw" type="password" placeholder="请输入您的密码" v-model="pwd"/>
+					</span>
+			    </li>
+			    <li class="user-btn-list">
+					<span class="user-btn p-btn" @click="cashed" v-text="getText('wCPF')"></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+			num:'',
+			adr:'',
+			pwd:'',
+			type:'',
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				this.languageType=Language.getLanguageType();
+				$('#num').attr('placeholder',vm.getText('wPPFN'));
+				$('#adr').attr('placeholder',vm.getText('wPPAD'));
+				$('#psw').attr('placeholder',vm.getText('wPPSW'));
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			cashed:function(){
+				if(ToolCheck.isDefine(this.num)){
+					if(ToolCheck.isDefine(this.adr)){
+						if(ToolCheck.isDefine(this.pwd)){
+							var checkWalletAdr=ToolCheck.isWalletAdr(this.adr);
+							if(checkWalletAdr.type){
+								var nameSpace='withdraw';
+								var serviceData={
+									type:vm.type,
+									coinNum:vm.num,
+									toAddress:vm.adr,
+									dealPassword:vm.pwd
+								}
+								ToolUI.openProgress();
+								ToolWebRequests.ajaxPost(nameSpace,serviceData,this.cashedCallback);
+							}else{
+								Tools.alertFormat(vm.languageType,checkWalletAdr);
+							}
+						}else{
+							Tools.alertFormat(null,vm.getText('wPPSW'));
+//							alert(vm.getText('wPPSW'));
+						}
+					}else{
+						Tools.alertFormat(null,vm.getText('wPPAD'));
+//						alert(vm.getText('wPPAD'));
+					}
+				}else{
+					Tools.alertFormat(null,vm.getText('wPPFN'));
+//					alert(vm.getText('wPPFN'));
+				}
+			},
+			cashedCallback:function(status,res){
+				ToolUI.closeProgress();
+				if(status){
+					Tools.alertFormat(vm.languageType,res);
+//					alert(res.msg);
+				}else{
+					Tools.alertFormat(vm.languageType,res);
+//					alert(res.msg);
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+		vm.type=api.pageParam.type;
+	};
+	document.body.addEventListener('touchstart', function () {}); 
+</script>
+
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>首页</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui-slide.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/main/home.css"/>
+</head>
+<style>
+	.copyLeft,.copyRight{
+		background: #2c303a;
+	}
+	.price_integer{
+		font-size: 1.25rem;
+		font-family: "PF-Bold";
+	}
+	.price_decimal{
+		font-size: 0.6rem;
+	}
+	.total-b-f{
+		color: #323232;
+	}
+	.total-t-i{
+		font-size: 0.75rem;
+	}
+	.total-t-d{
+		font-size: 0.45rem;
+	}
+	.total-t-bi{
+		color: #235697;
+		font-size: 0.5rem;
+	}
+	.total-t-bd{
+		font-size: 0.3rem;
+		color: #235697;
+	}
+	.p-l-20{
+		padding-left: 0.5rem;
+	}
+	.aui-slide-page-active {
+	    background: #dabb84;
+	   /* from { opacity: 0.3; }
+	    to { opacity: 1 }*/
+	}
+</style>
+<body>
+	<div id="app">
+		<div class="aui-content flex-con flex-overflow">
+			<ul class="m-list">
+			    <li id="price" class="flex-horizontal m-w-all price">
+			    </li>
+			    <li class="flex-horizontal m-w-all price-l">
+			    	<span class="aui-col-xs-4">
+			    		<label class="price-l-t">
+			    			<font class="price_integer">{{coinPriceYestoday|fnI}}<font class="price_decimal">{{coinPriceYestoday|fnD}}</font></font>
+			    		</label>
+			    		<label class="price-l-b" v-text="getText('coinPriceYestodayT')"></label>
+			    	</span>
+			    	<span class="aui-col-xs-4">
+			    		<label class="price-l-t">
+			    			<font class="price_integer">{{coinPriceToday|fnI}}<font class="price_decimal">{{coinPriceToday|fnD}}</font></font>
+			    		</label>
+			    		<label class="price-l-b" v-text="getText('coinPriceTodayT')"></label>
+			    	</span>
+			    	<span class="aui-col-xs-4">
+			    		<label class="price-l-t">
+			    			<font class="price_integer">{{coinPriceIncrease|fnI}}<font class="price_decimal">{{coinPriceIncrease|fnD}}</font></font>
+			    		</label>
+			    		<label class="price-l-b" v-text="getText('coinPriceIncreaseT')"></label>
+			    	</span>
+			    </li>
+			    <li class="flex-vertical total" v-if="isLogin">
+			    	<span class="flex-horizontal">
+			    		<label class="total-t p-l-20">
+			    			<font>{{getText('coinTotalT')}}<font class="total-t-i">{{coinTotal|fnI}}<font class="total-t-d">{{coinTotal|fnD}}</font></font></font>
+			    		</label>
+			    		<label class="total-t">
+			    			<font>{{getText('coinIncomeT')}}<font class="total-t-i">{{coinIncome|fnI}}<font class="total-t-d">{{coinIncome|fnD}}</font></font></font>
+			    		</label>
+			    	</span>
+			    	<span>
+			    		<label class="aui-col-xs-4 total-b">
+			    			<font class="total-b-f">{{getText('coinReleasedT')}}<font class="total-t-bi">{{coinReleased|fnI}}<font class="total-t-bd">{{coinReleased|fnD}}</font></font></font>
+			    		</label>
+			    		<label class="aui-col-xs-4 total-b">
+			    			<font class="total-b-f">{{getText('coinInOrderT')}}<font class="total-t-bi">{{coinInOrder|fnI}}<font class="total-t-bd">{{coinInOrder|fnD}}</font></font></font>
+			    		</label>
+			    		<label class="aui-col-xs-4 total-b">
+			    			<font class="total-b-f">{{getText('coinReleaseTodayT')}}<font class="total-t-bi" v-text="coinReleaseToday+'%'"></font></font>
+			    		</label>
+			    	</span>
+				</li>
+				<li class="flex-horizontal achievement" v-if="isLogin">
+					<div class="achievement-l flex-vertical">
+						<!--<span class="achievement-l-t flex-vertical" @click="openWin('popularize','left')">-->
+						<span class="achievement-l-t flex-vertical">
+							<span class="achievement-t-span flex-horizontal">
+								<label class="flex-con" v-text="getText('sharedCAT')"></label>
+								<span></span>
+							</span>
+							<label class="achievement-t-label">
+								<font>{{achievementLeft|fnI}}<font>{{achievementLeft|fnD}}</font></font>
+							</label>
+						</span>
+						<!--<button class="achievement-l-b copyLeft" v-text="getText('sharedCAExtensionLinkT')"></button>-->
+					</div>
+					<div class="achievement-c"></div>
+					<div class="achievement-r flex-vertical">
+						<!--<span class="achievement-l-t flex-vertical" @click="openWin('popularize','right')">-->
+						<span class="achievement-l-t flex-vertical">
+							<span class="achievement-t-span flex-horizontal">
+								<label class="flex-con" v-text="getText('sharingCAT')"></label>
+								<span></span>
+							</span>
+							<label class="achievement-t-label">
+								<font>{{achievementRight|fnI}}<font>{{achievementRight|fnD}}</font></font>
+							</label>
+						</span>
+						<!--<button class="achievement-l-b copyRight" v-text="getText('sharingCAExtensionLinkT')"></button>-->
+					</div>
+				</li>
+				<!--<li v-if="!isLogin">
+					<div id="aui-slide">
+				        <div id="aui-slide-wrap" class="aui-slide-wrap" >
+				        </div>
+				        <div class="aui-slide-page-wrap"></div>
+				    </div>
+				</li>-->
+				<li class="li_login" v-if="!isLogin">
+					<button class="login-btn" @click="openWin('login')"></button>
+				</li>
+			</ul>
+		</div>
+		<!--<footer class="footer1" v-if="!isLogin">
+			<div class="footer_bg"></div>
+			<div class="isLogin flex-horizontal">
+				<span class="aui-col-xs-6">
+					<label class="user-btn-l p-btn" @click="openRegisterWin('register')" v-text="getText('register')"></label>
+				</span>
+				<span class="aui-col-xs-6" @click="openWin('login')">
+					<label class="user-btn-r p-btn" v-text="getText('login')"></label>
+				</span>
+			</div>
+		</footer>-->
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/aui/aui-slide.js"></script>
+<script type="text/javascript" src="../../script/vue-lazyload.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript" src="../../script/echarts.min.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript" src="../../script/clipboard.min.js" ></script>
+<script type="text/javascript">
+//	ToolUI.vLazyload();
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			isLogin:false,
+			languageType:'CN',
+			coinPriceYestoday:0,//昨日牌价
+			coinPriceToday:0,//今日牌价
+			coinPriceIncrease:0,//涨幅
+			coinPriceX:[],
+			coinPriceY:[],
+			coinIncome: 0,//总收益
+			coinTotal: 0,//总价值
+	        coinReleaseToday: 0,//今日算力
+	        coinInOrder: 0,//持有算力
+	        coinReleased: 0,//可用算力
+	        achievementLeft: 0,//左区业绩
+	        achievementRight: 0,//右区业绩
+			leftSpreadUrlImg:'',
+			rightSpreadUrlImg:'',
+			imgList:[],
+		},
+		methods: {
+			init:function(){
+				//获取languageType的值并赋值给this.data.languageType
+				this.languageType=Language.getLanguageType();
+				//判断是否已经登录，没有是false登录是true。并赋值给isLogin
+				vm.isLogin=ToolCheck.isLogin();
+				//初始化价格走势图控件
+				initEcharts(this.coinPriceX,this.coinPriceY);
+				//初始化价格走势图数据
+				this.initCoinPrice();
+				//初始化资产相关
+				this.initAsset();
+				//初始化banner轮播图
+//				this.initBanner();
+			},
+			initCoinPrice: function() {
+				//判断是否已经登录
+				if(!vm.isLogin){
+				//没有登录的情况
+					//获取当前时间戳
+					var date=new Date();
+					//将当前的时间戳以y-m-d h:m：s
+					var time=ToolDate.formatDateTime(date);
+					//
+					var beginTime=ToolDate.getDateForCount(time,-100).substring(0,10);
+					//截取年月日时
+					var endTime=time.substring(0,10);
+					//拼接请求的url
+					var nameSpace='coinPrice?dateStart='+beginTime+'&dateEnd='+endTime;
+					//弹出等待框
+					ToolUI.showProgress();
+					//发送ajax请求
+					ToolWebRequests.ajaxGet(nameSpace,this.initCoinPriceCallback);
+				}
+			},
+			initCoinPriceCallback:function(status,res){
+				ToolUI.hideProgress();
+				var data=res.data;
+				if(status){
+					this.coinPriceYestoday=data.coinPriceYestoday;
+					this.coinPriceToday=data.coinPriceToday;
+					this.coinPriceIncrease=data.coinPriceIncrease;
+					this.coinPriceX=[];
+					this.coinPriceY=[];
+					for(var i=0;i<data.list.length;i++){
+						if(this.languageType=='EN'){
+							this.coinPriceX.push(this.dateFormat(data.list[i].date));
+						}
+						else{
+							this.coinPriceX.push(data.list[i].date);
+						}
+						this.coinPriceY.push(data.list[i].price);
+					}
+					initEcharts(this.coinPriceX,this.coinPriceY);
+				}else{
+					Tools.toastFormat(vm.languageType,res);
+				}				
+			},
+			initBanner:function(){
+				if(!vm.isLogin){
+					var nameSpace='ad/get?positionId=11';
+					ToolUI.showProgress();
+					ToolWebRequests.ajaxGet(nameSpace,this.initBannerCallback);
+				}
+			},
+			initBannerCallback:function(status,res){
+				ToolUI.hideProgress();
+				if(status){
+					for(var i=0;i<res.data.length;i++){
+						var div = document.getElementById("aui-slide-wrap");
+						var oDiv = document.createElement('div');
+						oDiv.className="aui-slide-node bg-dark";
+						var img=document.createElement('img');
+						img.src=res.data[i].mainImg;
+						var bData=res.data[i];
+						img.onclick=function(){
+							vm.openBannerWin(bData);
+						};
+						oDiv.appendChild(img);
+						div.appendChild(oDiv);
+					}
+					ToolUI.aSlide('aui-slide',300);
+					console.log(vm.imgList.length);
+				}
+			},
+			initAsset:function(){
+				if(vm.isLogin){
+					var date=new Date();
+					var time=ToolDate.formatDateTime(date);
+					var beginTime=ToolDate.getDateForCount(time,-100).substring(0,10);
+					var endTime=time.substring(0,10);
+					var nameSpace='getFirstPageCoinPrice?dateStart='+beginTime+'&dateEnd='+endTime;
+					ToolUI.showProgress();
+					ToolWebRequests.ajaxGet(nameSpace,this.initAssetCallback);
+				}
+			},
+			initAssetCallback:function(status,res){
+				ToolUI.hideProgress();
+				var data=res.data;
+				if(status){
+					this.coinPriceYestoday=data.coinPriceYestoday;
+					this.coinPriceToday=data.coinPriceToday;
+					this.coinPriceIncrease=data.coinPriceIncrease;
+					this.coinPriceX=[];
+					this.coinPriceY=[];
+					for(var i=0;i<data.list.length;i++){
+						if(this.languageType=='EN'){
+							this.coinPriceX.push(this.dateFormat(data.list[i].date));
+						}
+						else{
+							this.coinPriceX.push(data.list[i].date);
+						}
+						this.coinPriceY.push(data.list[i].price);
+					}
+					initEcharts(this.coinPriceX,this.coinPriceY);
+					
+					this.coinIncome=data.coinInCome;
+					this.coinTotal=data.coinTotalValue;
+					
+			        this.coinReleaseToday=data.todayHashRate;
+			        this.coinInOrder=data.lastingHashRate;
+			        this.coinReleased=data.usableHashRate;
+			        
+			        this.achievementLeft=data.leftSharedCommunityPerf;
+			        this.achievementRight=data.rightSharedCommunityPerf;
+			        this.leftSpreadUrlImg=data.leftSharedCommunityLink;
+			        this.rightSpreadUrlImg=data.rightSharedCommunityLink;
+			        //初始化复制链接方法
+			        this.initCopyLeft();
+			        this.initCopyRight();
+				}else{
+//					ToolUI.toast(data.msg);
+					Tools.toastFormat(vm.languageType,res);
+				}
+			},
+			initCopyLeft:function(){
+				var clipboard = new ClipboardJS('.copyLeft', {
+				    text: function(trigger) {
+				        return vm.leftSpreadUrlImg;
+				    }
+				});
+			    clipboard.on('success', function(e) {
+			    	Tools.alertFormat(null,vm.getText('copyST'));
+//			       	alert(vm.getText('copyST'));
+			       	console.log(e.text);
+			    });
+			    clipboard.on('error', function(e) {
+			        console.log(e);
+			    });
+			},
+			initCopyRight:function(rightSpreadUrlImg){
+				var clipboard = new ClipboardJS('.copyRight', {
+				    text: function(trigger) {
+				        return vm.rightSpreadUrlImg;
+				    }
+				});		
+			    clipboard.on('success', function(e) {
+			    	Tools.alertFormat(null,vm.getText('copyST'));
+//			       	alert(vm.getText('copyST'));
+			       	console.log(e.text);
+			    });		
+			    clipboard.on('error', function(e) {
+			        console.log(e);
+			    });
+			},
+			openWin:function(url,type){
+				var params={
+					type:type
+				}
+				ToolWin.openWin(url,params);
+			},
+			openRegisterWin:function(){
+				var FNScanner = api.require('FNScanner');
+				FNScanner.open({
+				}, function(ret, err) {
+			        if(ret.eventType=='success'){
+			        	var herf = ret.content;
+						if(herf.indexOf('?') != -1){
+							var param=herf.substr(herf.indexOf('?')+1,herf.length);	
+							var lorBegin=param.indexOf('=')+1;								
+							var strs=param.substr(lorBegin,param.length).split("_");
+						}
+						var leftOrRight=strs[0].toString();
+						var parentId=strs[1].toString();
+						var recommendId=strs[2].toString();
+						var data={
+							recommendId:recommendId,
+							leftOrRight:leftOrRight,
+							parentId:parentId,
+							mtR:0
+						}
+						var param={
+							data:data
+						}
+						ToolWin.openWin('register',param);
+			        }
+//			        else if(ret.eventType=="cancel"){
+//			        	var title=vm.getText('registerCancel');
+//						var msg='';
+//						var btnY=vm.getText('registerY');
+//						var btnN=vm.getText('registerN');
+//			        	api.confirm({
+//						    title: title,
+//						    msg: msg,
+//						    buttons: [btnY, btnN]
+//						}, function(ret, err) {
+//						    var index = ret.buttonIndex;
+//						    if(index==1){
+////						    	vm.closeWin();
+//						    }else{
+//						    	vm.getParentForScanner();
+//						    }
+//						});
+//			        }
+				});
+			},
+			openBannerWin:function(data){
+				console.log(JSON.stringify(data));
+				var url='../memberCenter/memberDetail';
+				var params={
+					data:data
+				}
+				ToolWin.openWin(url,params);
+			},
+			changeLanguage:function(){
+				vm.languageType=Language.getLanguageType();
+				//初始化价格走势图数据
+				this.initCoinPrice();
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			dateFormat:function(date){
+				var str=date.split("-");
+				var enDate=str[2].toString()+'/'+str[1].toString()+'/'+str[0].toString();
+				return enDate;
+			}
+		},
+		filters:{
+			fnI:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var i=v;
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					i=strs[0].toString();
+				}
+				return i;
+			},
+			fnD:function(value){
+				//首先判断有无小数
+		        var v=value.toString();
+				var d='.00';
+				if(v.indexOf('.') != -1){
+					var strs=v.split(".");
+					d='.'+strs[1].toString();
+				}
+				if(d.length>2){
+					d=d.substring(0,3);
+				}
+				return d;
+			}
+		}
+	});
+	apiready = function() {
+		vm.init();
+		Tools.ListenerChangeLanguage(vm.changeLanguage);
+		Tools.ListenerRefreshData(vm.init);
+	};
+	//echarts控件设置相关函数
+	function initEcharts(dataX,dataY){
+		var text=vm.getText('ThePriceChart');
+		var name=vm.getText('price');
+		var myChart = echarts.init(document.getElementById('price'));
+		var option = {
+            title: {
+                text: text,
+                textStyle:{
+                	color:'#ffffff',
+                	fontFamily:'PF-Regular',
+                	fontSize:12,
+               },
+               padding:[20, 20]
+            },
+            tooltip: {
+            	trigger:'axis',
+            	axisPointer:{
+            		type:'line'
+            	}
+            },
+            grid: {
+		        left:10,
+		        right: 30,
+		        bottom: 15,
+		        borderColor:'#2d597c',
+		        containLabel: true,
+		    },
+		    //x轴字体颜色
+            xAxis: {
+                data: dataX,
+            	axisLabel:{
+            		color:'#cddae2',
+            		fontFamily:'PF-Regular',
+            		fontSize:11,
+            	},
+            	axisTick: {
+			        show: false
+			    },
+			    axisLine:{
+            		show:false,
+            		lineStyle: {
+                        // 使用深浅的间隔色
+                        color: ['#2d597c']
+                    }   
+            	},
+            },
+            yAxis: {
+			    type : 'value',
+			    axisLabel:{
+            		color:'#cddae2',
+            		fontFamily:'PF-Regular',
+            		fontSize:11,
+            	},
+            	axisLine:{
+            		show:false,
+            		lineStyle: {
+                        // 使用深浅的间隔色
+                        color: ['#2d597c']
+                    }   
+            	},
+			    // 控制网格线是否显示
+                splitLine: {
+                        show: true,
+                        //  改变轴线颜色
+                        lineStyle: {
+                            // 使用深浅的间隔色
+                            color: ['#2d597c']
+                        }                            
+                },
+                axisTick: {
+			        show: false
+			    }
+			},
+            series: [{
+                name: name,
+                type: 'line',
+                symbol:'circle',
+                symbolSize:8,
+                //设置折线图原点颜色
+                itemStyle : { 
+                	color:'#ffffff',
+                },
+                //设置折线图颜色
+                lineStyle:{    
+                    color:'#ffffff',
+                    width:1
+                },
+                areaStyle: {
+                	color:{
+                		x: 0,
+					    y: 0,
+					    x2: 0,
+					    y2: 1,
+					    //设置折线区域颜色
+                		colorStops: [{
+					        offset: 0, color: 'rgba(2,202,202,0.8)' // 0% 处的颜色
+					    }, {
+					        offset: 1, color: 'rgba(2,202,202,0)' // 100% 处的颜色
+					    }],
+                	},
+                	
+                },
+                data: dataY
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        
+	}
+document.body.addEventListener('touchstart', function () {}); 
+</script>
+
+</html>

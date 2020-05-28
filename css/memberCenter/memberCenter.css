@@ -1,0 +1,39 @@
+html,body{
+	width: 100%;
+	height: 100%;
+}
+.m-l{
+	margin-top: 0.5rem;
+	width: 100%;
+	height: 5rem;
+	background: #ededed;
+}
+.m-l:active{
+	background: #dfdfdf;
+}
+.m-l-t-36{
+	margin-top: 0.9rem;
+}
+.l-t{
+	margin-top: 1.25rem;
+	height: 0.75rem;
+	line-height: 0.75rem;
+	color: rgb(204,204,204);
+	font-family: "PF-Bold" ;
+	font-size: 0.75rem;
+}
+.l-b{
+	margin-top: 0.625rem;
+	height: 1.25rem;
+	line-height: 1.25rem;
+	color: rgb(218,187,132);
+	font-family: "PF-Light" ;
+	font-size: 1.5rem;
+}
+.l-b-d{
+	font-size: 0.6rem;
+}
+.l-t,.l-b{
+	width: 100%;
+	text-align: center;
+}

@@ -1,0 +1,28 @@
+.m-list-l{
+	margin: 0 0.875rem;
+	margin-top: 1.25rem;
+	height: 6.2rem;
+	background: #E6E6E6;		
+}
+.m-t-75{
+	margin-top:1.875rem;
+}
+.m-t{
+	height: 2.2rem;
+	line-height: 2.2rem;
+	font-size: 0.85rem;
+	font-family: "PF-Bold";
+	color: #235697;
+	text-align: center;
+}
+.m-b{
+	height: 4rem;
+	color: #313131;
+	line-height:1rem;
+	padding: 0 1rem;
+	font-size: 0.525rem;
+	font-family: "PF-Regular";
+}
+.m-b-f{
+	color: #FA2B48;
+}

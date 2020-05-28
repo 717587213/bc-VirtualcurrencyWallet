@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>登录</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/setting/changeLanguage.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<div class="aui-content flex-con flex-overflow">
+			<ul class="m-list">
+			    <li class="m-w-all m-list-l">
+			        <label class="m-w-all">请选择语言</label>
+			        <label class="m-w-all">please select language</label>
+			    </li>
+			    <li class="user-btn-list">
+					<span class="user-btn" @click="changeLanguage('CN')">中文</span>
+				</li>
+				<li class="user-btn-list">
+					<span class="user-btn p-btn" @click="changeLanguage('EN')">English</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			isLogin:false,
+			languageType:''
+		},
+		methods: {
+			//判断使用语言的方法
+			changeLanguage:function(type){
+				//先判断是否已经登录
+				this.isLogin=ToolCheck.isLogin();
+				//将data里的languageType赋值传进来的type
+				this.languageType=type;
+				//判断代码是否登录
+				if(this.isLogin)
+				{
+					//如果登录初始化language=0
+					var language='0';
+					//如果type==en，则language='1'
+					if(type=='EN'){
+						language='1';
+					}
+					//弹出加载框
+					ToolUI.showProgress();
+					//拼接请求路径
+					var nameSpace='user/setLanguage?language='+language;
+					//发送ajax请求
+					ToolWebRequests.ajaxGet(nameSpace,this.changeLanguageCallback);
+				//如果没有登录
+				}else{
+					//设置setLanguageType(type)
+					Language.setLanguageType(type);
+					Tools.BroadChangeLanguage();
+					//关闭当前窗口
+					ToolWin.openWin("../main/main");
+				}
+			},
+			changeLanguageCallback:function(status,res){
+				//关闭默认弹窗
+				ToolUI.hideProgress();
+				if(status){
+					//设置setLanguageType=vm.languageType
+					Language.setLanguageType(vm.languageType);
+					//向外面广播出去
+					Tools.BroadChangeLanguage();
+					//关闭当前窗口
+					ToolWin.closeWin();
+				}else{
+					Tools.alertFormat(vm.languageType,res);
+//					alert(res.msg);
+				}
+			}
+		},
+	});
+	apiready = function() {
+	};
+	//touchstartsh是事件名称
+	document.body.addEventListener('touchstart', function () {});
+</script>
+
+</html>

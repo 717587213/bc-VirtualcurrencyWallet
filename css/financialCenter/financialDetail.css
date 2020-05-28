@@ -1,0 +1,32 @@
+.m-List{
+	margin: 0 0.625rem;
+	margin-top: 0.75rem ;
+}
+.m-table{
+	width: 100%;
+	color: rgb(204,204,204);
+	font-size: 0.575rem;
+	font-family: "PF-Regular";
+	text-align:center;
+	border-collapse:separate; 
+	border-spacing:0 0.45rem;
+}
+.m-th{
+	height: 1.25rem;
+	color: #313131;
+}
+.m-tr-content{
+	height: 1.25rem;
+	color: #596164;
+	background: #E6E6E6;
+}
+.m-tr-content-btn{
+	height: 0.95rem;
+	width: 0.95rem;
+	line-height: 0.95rem;
+	text-align: center;
+	color: rgb(218,187,132);
+	font-size: 0.5rem;
+	border: 0.05rem solid rgb(218,187,132);
+	border-radius: 50%;
+}

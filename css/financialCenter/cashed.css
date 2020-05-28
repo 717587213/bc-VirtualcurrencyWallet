@@ -1,0 +1,57 @@
+.aui-content{
+	margin:0 0.625rem;
+	margin-top: 1.875rem;
+	background: #f5f5f5;
+}
+.m-list{
+	background: #F5F5F5;
+}
+.m-list-l{
+	height: 2.45rem;
+	line-height: 2.45rem;
+	border-bottom: solid 1px #E6E6E6;
+	padding-left: 0.875rem;
+}
+.m-title{
+	width: 5.5rem;
+	color: #ababab;
+	font-size: 0.75rem;
+	font-family: "PF-Bold";
+}
+.m-content,.m-content-r{
+	width: 100%;
+	color: rgb(204,204,204);
+	font-size: 0.75rem;
+	font-family: "PF-Regular";
+}
+.m-content-r{
+	color: #6792c5;
+}
+.aui-input, input[type="text"],input[type="password"]{
+	margin-top:0.625rem;
+	height: 1.25rem;
+	line-height: 1.25rem;
+	color: #235697;
+}
+.user-btn-list{
+	width: 100%;
+	margin: 2rem 0;
+}
+.user-btn{
+	width: 6.5rem;
+	height: 1.75rem;
+	line-height: 1.75rem;
+	text-align: center;
+	color: #235697;
+	font-size: 0.75rem;
+	font-family: "PF-Bold";
+	border:solid #001534 0.05rem;
+	border-radius: 0.375rem;
+	
+	position:relative;
+	overflow:hidden;
+	margin:auto;/*重要,IE兼容模式*/
+	top:50%;
+	left:50%;
+	margin-left:-3.25rem;
+}

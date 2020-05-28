@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>平台公告</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/memberCenter/memberPB.css"/>
+</head>  
+<style>
+.aui-content{ width: 90%; margin-left:5%;margin-top:1rem;}
+.aui-content h4{font-size: 1rem;font-family: "PF-Regular";font-weight: 700;color:#235697;text-align: center;}
+.aui-content .console{margin-top:1rem;font-size: 0.8rem;font-family: "PF-Regular";color:#596066;}
+</style>
+<body>
+	<div class="flex-vertical" id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title">行业资讯</div>
+			
+		</header>
+		<div class="aui-content">
+			<h4 v-text="title"></h4>
+			<div class="flex-con flex-overflow console" v-text="data.content"></div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+	    el: '#app',
+	    data: {
+	    	languageType:'CN',
+	    	data:'',
+	    	title:'',
+			url:'',
+			content:''
+	    },
+	    methods: {
+	        init:function(){
+	        	//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				
+				ToolWin.openFrame(this.data.url);
+				
+	        },
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+	    }
+	});
+	apiready = function() {
+		vm.data=api.pageParam.data;
+		vm.title=vm.data.tittle;
+		//console.log(vm.data);
+		//vm.init();
+		Tools.ListenerRefreshData(vm.init);
+	};
+</script>
+</html>

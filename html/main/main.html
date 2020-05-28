@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>mainWin</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/main/main.css"/>
+</head>
+<body>
+	<div id="app">
+		<header :class="['aui-bar','aui-bar-nav']" id="header">
+			<div class="aui-title" v-text="getText(title)"></div>
+			<a class="aui-pull-right aui-btn">
+				<span class="icon set" v-if="activeTab==3" @click="showPopup()"></span>
+			</a>
+		</header>
+		<footer id="footer" class="aui-bar aui-bar-tab">
+			<div class="aui-bar-tab-item" tapmode v-for="(item,index) in tabList" @click="openFrame(index)">
+				<div :class="[activeTab==index?item.active:item.noactive,'aui-iconfont']"></div>
+				<div :class="[activeTab==index?'aui-bar-tab-label-a':'aui-bar-tab-label','iconfont-s']" v-text="getText(item.title)"></div>
+			</div>
+		</footer>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			activeTab:0,
+			languageType:'CN',
+			isLogin:false,
+			title: 'home',
+			tabList: [{
+					title: 'home',
+					isActive: true,
+					url: 'home',
+					active: 'home_active',
+					noactive: 'home'
+				},
+				{
+					title: 'nftBank',
+					isActive: false,
+					url: '../lockPosition/none',
+					active: 'lockPosition_active',
+					noactive: 'lockPosition'
+				},
+				{
+					title: 'member',
+					isActive: false,
+					url: '../memberCenter/memberCenter',
+					active: 'memberCenter_active',
+					noactive: 'memberCenter'
+				},
+				{
+					title: 'financial',
+					isActive: false,
+					url: '../financialCenter/financialCenter',
+					active: 'financialCenter_active',
+					noactive: 'financialCenter'
+				}
+			],
+			frameGroup: [{
+					name: 'home',
+					url: 'home.html'
+				},
+				{
+					name: 'lockPosition',
+					url: '../lockPosition/none.html'
+				},
+				{
+					name: 'memberCenter',
+					url: '../memberCenter/memberCenter.html'
+				},
+				{
+					name: 'financialCenter',
+					url: '../financialCenter/financialCenter.html'
+				}
+			]
+		},
+		methods: {
+			init: function() {
+				//检测是否首次登录
+				var isFirst=ToolCheck.isFirstLogin();
+				if(isFirst){
+					//打开切换语言界面
+					ToolWin.openWin('../setting/changeLanguage');
+				}
+				this.languageType=Language.getLanguageType();
+				//设置沉浸式菜单栏并适配顶部
+				//ToolUI.setHeader();
+				//设置底部适配iphoneX
+				//$api.fixTabBar($api.byId('footer'));
+				//检查登录状态
+				vm.isLogin=ToolCheck.isLogin();
+				//初始化页面组
+				ToolWin.openFrameGroup('groupMain', this.frameGroup);
+			},
+			//通过底部打开页面的
+			openFrame: function(index) {
+					if(this.activeTab==index){
+						return;
+					}else{
+						if(vm.isLogin){
+							Tools.BroadRefreshData();
+							this.activeTab = index;
+							this.title=this.tabList[index].title;
+							ToolWin.setFrameGroupIndex('groupMain', index);
+						}else{
+							var msg=this.getText('PLogin');
+							ToolUI.toast(msg);
+						}
+					}
+			},
+			backNoLogin:function(){
+				var index=0;
+				this.activeTab = index;
+				this.title=this.tabList[index].title;
+				ToolWin.setFrameGroupIndex('groupMain', index);
+			},
+			showPopup:function(){
+				ToolWin.execScript('','financialCenter','showPopup()');
+			},
+			openWin:function(url){
+				ToolWin.openWin(url);
+			},
+			refreshData:function(){
+				//更新登录状态
+				vm.isLogin=ToolCheck.isLogin();
+			},
+			changeLanguage:function(){
+				vm.languageType=Language.getLanguageType();
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			loginOut:function(){
+	        	Tools.setLocal('loginType',false);
+	        	Tools.setLocal('userQQ',null);
+				Tools.setLocal('userMobile',null);
+				Tools.setLocal('userWeChat',null);
+				Tools.setLocal('userEmail',null);
+				Tools.setLocal('userId',null);
+				Tools.setLocal('token',null);
+				Tools.setLocal('userName',null);
+				Tools.setLocal('headPic',null);
+	        	Tools.BroadRefreshData();
+	        	this.backNoLogin();
+	        },
+		},
+	});
+	apiready = function() {
+		//Language.setLanguageType('CN');
+		
+		//vm.languageType = Tools.ListenerChangeLanguage(vm.changeLanguage);
+		//Tools.ListenerRefreshData(vm.refreshData);
+		vm.init();
+	};
+</script>
+
+</html>

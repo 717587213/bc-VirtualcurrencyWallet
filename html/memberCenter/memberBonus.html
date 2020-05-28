@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>收益相关</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/memberCenter/memberAchievement.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="title"></div>
+		</header>
+		<article class="profit flex-vertical">
+			<span class="profitAll" v-text="total"></span>
+			<span class="profitToday">
+				<label class="profitToday-l">今日分红：</label>
+				<label class="profitToday-r" v-text="today">255枚</label>
+			</span>
+			<span class="profitUse flex-horizontal">
+				<label class="aui-col-xs-6" v-text="free">可用收益：3456</label>
+				<label class="aui-col-xs-6" v-text="locked">冻结收益：567</label>
+			</span>
+		</article>
+		<article class="flex-con flex-overflow achievementList">
+			<table class="m-table">
+				<tr class="m-th">
+					<th>用户名</th>
+					<th>套餐</th>
+					<th>数量</th>
+					<th>日期</th>
+				</tr>
+				<tr class="m-tr-content" v-for="(item,index) in list">
+					<th v-text="item.userName"></th>
+					<th v-text="item.fromItemName"></th>
+					<th v-text="item.coinNum"></th>
+					<th v-text="item.date"></th>
+				</tr>
+			</table>
+		</article>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		type:'',
+		data: {
+			title:'详情',
+			total:'总分红：',
+			today:'',
+			free:'可用分红：',
+			locked:'冻结分红：',
+			list:[]
+		},
+		methods: {
+			init: function() {
+				this.initList(vm.type);
+			},
+			initList:function(type){
+				var nameSpace='';
+				if(type=='leftTotal'){
+					this.title='左区累计分红';
+					nameSpace='member/center/bonusDetail?leftOrRight=0';
+				}else if(type=='rightTotal'){
+					this.title='右区累计分红';
+					nameSpace='member/center/bonusDetail?leftOrRight=1';
+				}else if(type=='leftToday'){
+					this.title='左区累计日分红';
+					nameSpace='member/center/bonusTodayDetail?leftOrRight=0';
+				}else if(type=='rightToday'){
+					this.title='右区累计日分红';
+					nameSpace='member/center/bonusTodayDetail?leftOrRight=1';
+				}
+				ToolUI.showProgress();
+				ToolWebRequests.ajaxGet(nameSpace,this.initListCallBack);
+			},
+			initListCallBack:function(status,res){
+				ToolUI.hideProgress();
+				var data=res.data;
+				if(status){
+					this.total='总分红：'+data.bonusTotal+'枚';
+					this.today=data.bonusToday+'枚';
+					this.free='可用分红：'+data.bonusFree+'枚';
+					this.locked='冻结分红：'+data.bonusLocked+'枚';
+					this.list=data.bonusList;
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		//设置沉浸式菜单栏
+		ToolUI.setHeader();
+		vm.type=api.pageParam.type;
+		vm.init();
+	};
+</script>
+
+</html>

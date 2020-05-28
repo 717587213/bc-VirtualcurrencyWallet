@@ -1,0 +1,190 @@
+html,
+body,
+#app {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	background: #f5f5f5;
+}
+footer{
+	width: 100%;
+	height: 2.45rem;
+}
+.aui-bar-nav,
+.aui-searchbar {
+	background:#235697;
+}
+.aui-title{
+	font-size: 0.8rem;
+	font-family: "PF-Bold";
+}
+.footer1{
+	width: 100%;
+	height: 3.25rem;
+	position: fixed;
+    top: auto;
+    bottom: 0;
+    table-layout: fixed;
+}
+.footer_bg{
+	width: 100%;
+	height: 3.25rem;
+	position:absolute;
+	z-index:0;
+}
+.isLogin{
+	width: 100%;
+	height: 3.25rem;
+    position:absolute;
+    /*background: transparent;*/
+    /*background-color: rgba(0,0,0,1);*/
+	z-index:1;
+}
+.isLogin span{
+	height: 3.25rem;
+}
+.user-btn-l,.user-btn-r{
+	width: 4rem;
+	height: 1.35rem;
+	line-height: 1.35rem;
+	text-align: center;
+	color: rgb(218,187,132);
+	font-size: 0.8rem;
+	font-family: "PF-Medium";
+	border:solid rgb(218,187,132) 0.05rem;
+	border-radius: 0.375rem;
+	
+	position:relative;
+	overflow:hidden;
+	margin:auto;/*重要,IE兼容模式*/
+	top:0;
+	left:50%;
+	margin-top:0.875rem;
+}
+.user-btn-l{
+	margin-left:-0.5rem;
+}
+.user-btn-r{
+	margin-left:-3rem;
+}
+.flex-wrap,
+.flex-vertical,
+.flex-horizontal {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+}
+
+.flex-vertical {
+	-webkit-box-orient: vertical;
+	-webkit-flex-flow: column;
+	flex-flow: column;
+}
+
+.flex-horizontal {
+	-webkit-box-orient: horizontal;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+}
+
+.flex-overflow {
+	overflow: auto;
+}
+
+.flex-con {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	flex: 1;
+}
+
+.bg-f {
+	background: #FFFFFF;
+}
+
+.bg-main {
+	background: #23262e;
+}
+.bg-top1{
+	background: #272a33;
+}
+.bg-top2{
+	background: #23262e;
+}
+.m-h-55{
+	height: 1.375rem;
+}
+.m-h-240{
+	height: 6rem;
+}
+.m-w-all{
+	width: 100%;
+}
+.m-table{
+	margin:0 auto;
+}
+.user-btn:active{
+	color: #FFFFFF;
+	background:#001534;
+}
+.p-btn:active{
+	color: #FFFFFF;
+	background:#001534;
+}
+@font-face {
+  font-family: 'PF-ExtraLight';   /*字体名称*/
+  src: url('fonts/PingFang/PingFang ExtraLight.ttf');       /*字体源文件*/
+}
+@font-face {
+  font-family: 'PF-Light';   /*字体名称*/
+  src: url('fonts/PingFang/PingFang Light.ttf');       /*字体源文件*/
+}
+@font-face {
+  font-family: 'PF-Bold';   /*字体名称*/
+  src: url('fonts/PingFang/PingFang Bold.ttf');       /*字体源文件*/
+}
+@font-face {
+  font-family: 'PF-Heavy';   /*字体名称*/
+  src: url('fonts/PingFang/PingFang Heavy.ttf');       /*字体源文件*/
+}
+@font-face {
+  font-family: 'PF-Medium';   /*字体名称*/
+  src: url('fonts/PingFang/PingFang Medium.ttf');       /*字体源文件*/
+}
+@font-face {
+  font-family: 'PF-Regular';   /*字体名称*/
+  src: url('fonts/PingFang/PingFang Regular.ttf');       /*字体源文件*/
+}
+
+/* 若浏览器支持 backdrop-filter，则透明度为 50%，并启用毛玻璃 */
+@supports (-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
+    .footer_bg {
+        background: rgba(0, 0, 0, 0.5);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        -webkit-filter: blur(15px); /* Chrome, Safari, Opera */
+    	filter: blur(15px);
+    }
+}
+
+/* 若浏览器器不支持，则使用 MaterialDesign 的风格 */
+@supports not ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
+    .footer_bg {
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.18), 0px 6px 10px rgba(0, 0, 0, 0.22);
+        -webkit-filter: blur(15px); /* Chrome, Safari, Opera */
+    	filter: blur(15px);
+    }
+}
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { 
+	color: #C3C3C3; 
+} 
+input:-moz-placeholder, textarea:-moz-placeholder { 
+	color: #C3C3C3; 
+} 
+input::-moz-placeholder, textarea::-moz-placeholder { 
+	color: #C3C3C3; 
+} 
+input:-ms-input-placeholder, textarea:-ms-input-placeholder { 
+	color: #C3C3C3; 
+}

@@ -1,0 +1,205 @@
+.m-tab{
+	width: 50%;
+	margin-top: 1rem;
+}
+.balance{
+	margin-top: 1.125rem;
+	color: rgb(204,204,204);
+	font-size: 0.725rem;
+	font-family: "PF-Regular";
+	height: 0.75rem;
+	line-height: 0.75rem;
+	text-align: center;
+}
+.balance_d{
+	font-size: 0.5rem;
+}
+.prompt{
+	margin-top: 1rem;
+	padding-left: 0.875rem;
+	width: 100%;
+	height: 0.5rem;
+	line-height: 0.5rem;
+	font-family: "PF-Regular";
+	font-size: 0.5rem;
+	color: rgba(153,153,153,0.35);
+}
+.aui-bar-btn-item.aui-active{
+	background: rgb(218,187,132);	
+	color: #23262E;
+}
+.aui-bar-btn-item{
+	width: 4.5rem;
+	height: 1.5rem;
+	line-height: 1.5rem;
+	font-family: "PF-Bold";
+	background: #22252d;
+	color: rgb(218,187,132);
+	border-color:rgb(218,187,132);
+}
+.aui-bar-btn.aui-bar-btn-round .aui-bar-btn-item:first-child{
+	border-top-left-radius:0.25rem;
+	border-bottom-left-radius:0.25rem
+}
+.aui-bar-btn.aui-bar-btn-round .aui-bar-btn-item:last-child {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+.userProfit{
+	margin: 0 0.875rem;	
+}
+.userProfit-l{
+	margin-top: 0.5rem;
+	height: 3.75rem;
+	background: -webkit-linear-gradient(#23262e, #2b2e38); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(#23262e, #2b2e38); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(#23262e, #2b2e38); /* Firefox 3.6 - 15 */
+	background: linear-gradient(#23262e, #2b2e38); /* 标准的语法 */
+	border-radius: 0.3rem;
+	
+	color: rgb(218,187,132);
+	font-family: "PF-Bold";
+}
+.userProfit-l-l{
+	/*height: 3.75rem;
+	line-height: 3.75rem;
+	padding-left: 1.875rem;
+	font-size: 2rem;*/
+}
+.userProfit-l-r,.userProfit-l-l{
+	/*text-align: right;*/
+	font-size: 0.65rem;
+	/*padding-left: 0.5rem;*/
+}
+.userProfit-l-l-t{
+	width: 100%;
+	margin-top: 0.75rem;
+	font-size: 0.875rem;
+	font-family: "PF-Bold";
+	padding-left: 1.5rem;
+}
+.userProfit-l-l-b{
+	width: 100%;
+	margin-top: 0.375rem;
+	font-size: 0.65rem;
+	font-family: "PF-Medium";
+	padding-left: 1.5rem;
+}
+.userProfit-l-r-t{
+	margin-top: 0.875rem;
+}
+.userProfit-l-r-b{
+	margin-top: 0.625rem;
+}
+.userProfit-l-r-t,.userProfit-l-r-b{
+	width: 100%;
+	height: 0.625rem;
+	line-height: 0.625rem;
+}
+.user-btn-list{
+	width: 100%;
+	margin: 1.25rem 0;
+}
+.user-btn{
+	width: 6.5rem;
+	height: 1.75rem;
+	line-height: 1.75rem;
+	text-align: center;
+	color: rgb(218,187,132);
+	font-size: 0.75rem;
+	font-family: "PF-Bold";
+	border:solid rgb(218,187,132) 0.05rem;
+	border-radius: 0.375rem;
+	
+	position:relative;
+	overflow:hidden;
+	margin:auto;/*重要,IE兼容模式*/
+	top:50%;
+	left:50%;
+	margin-left:-3.25rem;
+}
+.lockList{
+	margin: 0 0.625rem;
+	margin-top: 1.2rem ;
+}
+.m-table{
+	width: 100%;
+	color: rgb(204,204,204);
+	font-size: 0.575rem;
+	font-family: "PF-Regular";
+	text-align:center;
+	border-collapse:separate; 
+	border-spacing:0 0.45rem;
+}
+.m-th{
+	height: 1.25rem;
+}
+.m-tr-content{
+	height: 1.25rem;
+	background: #2d313b;
+}
+.m-tr-content-btn{
+	height: 0.85rem;
+	width: 1.5rem;
+	line-height: 0.85rem;
+	text-align: center;
+	color: rgb(218,187,132);
+	font-size: 0.575rem;
+	border: 0.05rem solid rgb(218,187,132);
+	border-radius: 0.125rem;
+}
+.m-list{
+	margin-top: 0.625rem;
+}
+.m-item{
+	width: 100%;
+	height: 5rem;
+	margin-top: 0.5rem;
+	color: rgb(204,204,204);
+	font-size: 0.575rem;
+	font-family: "PF-Regular";
+	text-align:left;
+	background: #2d313c;
+}
+.m-item>span{
+	height: 2.5rem;
+}
+.m-item-l{
+	/*min-width: 6rem;*/
+	height: 2.5rem;
+	font-family: "PF-Regular";
+}
+.m-item-l label:nth-child(1){
+	width: 100%;
+	margin-top: 0.5rem;
+	height: 0.625rem;
+	line-height: 0.625rem;
+	text-align: center;
+}
+.m-item-l label:nth-child(2){
+	width: 100%;
+	margin-top: 0.5rem;
+	height: 0.5rem;
+	line-height: 0.5rem;
+	text-align: center;
+}
+.star1,.star2,.star3,.star4,.star5{
+	height: 0.85rem;
+	background: url() no-repeat left center;
+	background-size: 6.1rem 0.85rem;
+}
+.star1{
+	background-image: url(../../image/bg_star1.png);
+}
+.star2{
+	background-image: url(../../image/bg_star2.png);
+}
+.star3{
+	background-image: url(../../image/bg_star3.png);
+}
+.star4{
+	background-image: url(../../image/bg_star4.png);
+}
+.star5{
+	background-image: url(../../image/bg_star5.png);
+}

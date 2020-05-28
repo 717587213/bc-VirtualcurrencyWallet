@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>注册</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/main/login.css"/>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('register')"></div>
+		</header>
+		<div class="aui-content flex-con flex-overflow">
+			<ul class="m-list">
+				<li class="bg_nft"></li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title">+86</label>
+			        <label class="division"></label>
+					<label class="m-content">
+						<input id="phone" type="text" placeholder="请输入手机号" v-model="mobile"/>
+					</label>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			    	<span class="m-content">
+						<input id="code" type="text" placeholder="请输入动态验证码" v-model="verCode"/>
+					</span>
+					<span class="m-content-r-btn" @click="getCode()" v-text="btnText"></span>
+			    </li>
+			    <li class="m-w-all m-list-l">
+			    	<span class="m-content">
+						<input id="name" type="text" placeholder="请设置您的昵称" v-model="userName"/>
+					</span>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			    	<span class="m-content">
+						<input id="psw" type="password" placeholder="请设置交易密码" v-model="userPwd"/>
+					</span>
+			    </li>
+			    <li class="user-btn-list">
+					<span class="user-btn p-btn" @click="register" v-text="getText('register')"></span>
+				</li>
+				<li class="m-w-all">
+					<label class="u-text" v-text="getText('registerP')"></label>
+				</li>
+				<!--<li class="flex-horizontal m-w-all m-list-b">
+					<span class="aui-col-xs-6">
+						<span class="m-w-all icon-wechat"></span>
+						<label class="m-w-all m-text"  v-text="getText('loginWechat')"></label>
+					</span>
+					<span class="aui-col-xs-6">
+						<span class="m-w-all icon-qq"></span>
+						<label class="m-w-all m-text" v-text="getText('loginQQ')"></label>
+					</span>
+				</li>-->
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+	    	languageType:'CN',
+			mobile:'',
+			verCode:'',
+			btnText:'获取验证码',
+			btnType:1,
+			userName:'',
+			userPwd:'',
+			leftOrRight:'0',
+			parentId:'0',
+			recommendId:'0',
+			mtR:0,
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				this.languageType=Language.getLanguageType();
+				this.btnText=this.getText('bd1');
+				$('#phone').attr('placeholder',vm.getText('bp2'));
+				$('#code').attr('placeholder',vm.getText('bd4'));
+				$('#name').attr('placeholder',vm.getText('rp1'));
+				$('#psw').attr('placeholder',vm.getText('rp2'));
+				var data=api.pageParam.data;
+				var check=ToolCheck.isDefine(data);
+				if(check){
+					vm.leftOrRight=data.leftOrRight;
+					vm.parentId=data.parentId;
+					vm.recommendId=data.recommendId;
+					vm.mtR=data.mtR;
+					console.log(JSON.stringify(data));
+				}else{
+					this.getParentForScanner();
+				}
+			},
+			getParentForScanner:function(){
+				var FNScanner = api.require('FNScanner');
+				FNScanner.open({
+				}, function(ret, err) {
+			        if(ret.eventType=='success'){
+			        	var herf = ret.content;
+						if(herf.indexOf('?') != -1){
+							var param=herf.substr(herf.indexOf('?')+1,herf.length);	
+							var lorBegin=param.indexOf('=')+1;								
+							var strs=param.substr(lorBegin,param.length).split("_");
+						}
+						vm.leftOrRight=strs[0].toString();
+						vm.parentId=strs[1].toString();
+						vm.recommendId=strs[2].toString();
+			        }
+			        else if(ret.eventType=="cancel"){
+			        	var title=vm.getText('registerCancel');
+						var msg='';
+						var btnY=vm.getText('registerY');
+						var btnN=vm.getText('registerN');
+			        	api.confirm({
+						    title: title,
+						    msg: msg,
+						    buttons: [btnY, btnN]
+						}, function(ret, err) {
+						    var index = ret.buttonIndex;
+						    if(index==1){
+						    	vm.closeWin();
+						    }else{
+						    	vm.getParentForScanner();
+						    }
+						});
+			        }
+				});
+			},
+			getCode:function(){
+				var check=ToolCheck.isMobileNumber(vm.mobile);
+				if(check.type){
+					//获取验证码使能
+					if(vm.btnType){
+						var nameSpace='msg/mobile/code';
+						var serviceData={
+							mobile:vm.mobile
+						}
+						ToolWebRequests.ajaxPost(nameSpace,serviceData,this.getCodeCallback);
+					}
+				}else{
+					Tools.alertFormat(vm.languageType,check);
+//					alert(check.msg)
+				}
+			},
+			getCodeCallback:function(status,res){
+				if(status){
+					settime();
+				}
+			},
+			register:function(){
+				var check=ToolCheck.isMobileNumber(vm.mobile);
+				if(check.type){
+					//检查验证码
+					if(ToolCheck.isDefine(vm.verCode)){
+						//检查昵称
+						if(ToolCheck.isDefine(vm.userName)){
+							//检查交易密码
+							if(ToolCheck.isDefine(vm.userPwd)){
+								var nameSpace='user/register';
+								var serviceData={
+									"mobile":vm.mobile,
+									"msgCode":vm.verCode,
+									"userName":vm.userName,
+									"dealPassword":vm.userPwd,
+									"parentId":vm.parentId,
+									"leftOrRight":vm.leftOrRight,
+									"recommendId":vm.recommendId
+								}
+								ToolUI.showProgress(vm.getText('registration'));
+								ToolWebRequests.ajaxPost(nameSpace,serviceData,this.registerCallback);
+							}else{
+								Tools.alertFormat(null,vm.getText('rp2'));
+//								alert(vm.getText('rp2'));
+							}
+						}else{
+							Tools.alertFormat(null,vm.getText('rp1'));
+//							alert(vm.getText('rp1'));
+						}
+					}else{
+						Tools.alertFormat(null,vm.getText('bd4'));
+//						alert(vm.getText('bd4'));
+					}
+				}else{
+					Tools.alertFormat(vm.languageType,check);
+//					alert(check.msg)
+				}
+			},
+			registerCallback:function(status,res){
+				ToolUI.hideProgress();
+				var title=vm.getText('registS');
+				var msg=vm.getText('loginNow');
+				var btnY=vm.getText('loginY');
+				var btnN=vm.getText('loginN');
+				if(status){
+					if(vm.mtR==0){
+						api.confirm({
+						    title: title,
+						    msg: msg,
+						    buttons: [btnY, btnN]
+						}, function(ret, err) {
+						    var index = ret.buttonIndex;
+						    if(index==1){
+						    	vm.login();
+						    }
+						});
+					}
+					else{
+						Tools.alertFormat(vm.languageType,res);
+						Tools.BroadRefreshData();
+						ToolWin.closeWin();
+					}
+//					alert(res.msg);
+				}else{
+					Tools.alertFormat(vm.languageType,res);
+//					alert(res.msg);
+				}
+			},
+			login:function(){
+				var check=ToolCheck.isMobileNumber(vm.mobile);
+				if(check.type){
+					if(ToolCheck.isDefine(vm.verCode)){
+						var language='0';
+						if(vm.languageType=='EN'){
+							language='1';
+						}
+						var nameSpace='user/login';
+						var serviceData={
+							"mobile":vm.mobile,
+							"msgCode":vm.verCode,
+							"language":language
+						}
+						ToolUI.openProgress();
+						ToolWebRequests.ajaxPost(nameSpace,serviceData,this.loginCallback);
+					}else{
+//						alert(vm.getText('bd4'));
+						Tools.alertFormat(null,vm.getText('bd4'));
+					}
+				}else{
+					Tools.alertFormat(vm.languageType,check);
+				}
+			},
+			loginCallback:function(status,res){
+				ToolUI.closeProgress();
+				var data=res.data;
+				if(status){
+					//缓存用户数据
+					Tools.setLocal('loginType',true);
+					Tools.setLocal('userQQ',data.qq);
+					Tools.setLocal('userMobile',data.mobile);
+					Tools.setLocal('userWeChat',data.weChat);
+					Tools.setLocal('userEmail',data.email);
+					Tools.setLocal('userId',data.userId);
+					Tools.setLocal('token',data.token);
+					Tools.setLocal('userName',data.userName);
+					Tools.setLocal('headPic',data.headPic);
+					Tools.setLocal('fuli',data.fuli);
+					//发送广播使各页面执行刷新操作
+					Tools.BroadRefreshData();
+					ToolWin.closeToWin('root');
+				}else{
+					Tools.alertFormat(vm.languageType,res);
+				}
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+	};
+	var countdown=60;
+	settime=function() {
+		if (countdown == 0) {
+			vm.btnText=vm.getText('bd1');
+			vm.btnType=1;
+			countdown=60;
+		} else { 
+			vm.btnText=vm.getText('bd2')+'(' + countdown + ')'; 
+			vm.btnType=0;
+			countdown--; 
+			setTimeout(function() { 
+				settime() 
+			},1000)
+		}
+	}
+	document.body.addEventListener('touchstart', function () {}); 
+</script>
+
+</html>

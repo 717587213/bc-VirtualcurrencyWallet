@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>复利设置</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+</head>
+<style>
+	#app,html,body{
+		width: 100%;
+		height: 100%;
+		background: #1f2129;
+	}
+	.aui-content{
+		background: #1F2129;
+	}
+	.ac{
+		color: #DABB84;
+	}
+	.anc{
+		color: #CCCCCC;
+	}
+	.m-list{
+		font-size:0.75rem;
+		font-family: "PF-Regular";
+		text-align: left;
+		background: #1F2129;
+		margin:0 1.875rem;
+		height: 1.875rem;
+		line-height: 1.875rem;
+		border-bottom: 0.05rem solid #DABB84;
+	}
+	.m-t-80{
+		margin-top: 2rem;
+	}
+	.btnR{
+		width: 1rem;
+		background: url(../../image/icon_mcis1.png) no-repeat center;
+		background-size: 0.8rem 0.55rem;
+	}
+	.explain{
+		color: #484c58;
+		margin:0 1.875rem;
+		margin-top: 3rem;
+		font-size: 0.6rem;
+		font-family: "PF-Regular";
+		background: url(../../image/icon_mcis2.png) no-repeat;
+		background-size: 0.55rem 0.55rem;
+		background-position-y: 0.15rem;
+		text-indent:0.8rem;
+	}
+</style>
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('mc3')"></div>
+		</header>
+		<div class="aui-content flex-con flex-overflow">
+			<div class="flex-horizontal m-list m-t-80" @click="setCI(1)">
+				<span :class="[ciType==1?'ac':'anc','flex-con']" v-text="getText('mcis1')"></span>
+				<span class="btnR" v-if="ciType==1"></span>
+			</div>
+			<div class="flex-horizontal m-list" @click="setCI(0)">
+				<span :class="[ciType==0?'ac':'anc','flex-con']" v-text="getText('mcis2')"></span>
+				<span class="btnR" v-if="ciType==0"></span>
+			</div>
+			<span class="explain" v-text="getText('mcis3')"></span>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/clipboard.min.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+			ciType:1,
+			ciCache:'',
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				this.languageType=Language.getLanguageType();
+				this.ciType=Tools.getLocal('fuli');
+			},
+			setCI:function(ciType){
+				//复利设置
+				this.ciCache=ciType;
+				var nameSpace='user/setfuli?fuli='+ciType;
+				ToolUI.showProgress();
+				ToolWebRequests.ajaxGet(nameSpace,this.setCICallback);
+			},
+			setCICallback:function(status,res){
+				ToolUI.hideProgress();
+	        	var data=res.data;
+	        	if(status){
+	        		this.ciType=this.ciCache;
+	        		Tools.setLocal('fuli',this.ciType);
+	        	}
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		vm.init();
+	};
+</script>
+
+</html>

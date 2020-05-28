@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>绑定邮箱</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/financialCenter/binding.css"/>
+	<style type="text/css">
+		.m-title{
+			width: 5rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('bet')"></div>
+		</header>
+		<div class="aui-content flex-con">
+			<ul class="m-list" v-if="!isBindEmail">
+			    <li class="flex-horizontal m-w-all m-list-l">
+			        <label class="m-title" v-text="getText('be1')"></label>
+			        <label class="division"></label>
+					<label class="m-content">
+						<input id="email" type="text" placeholder="请输入您的邮箱账号" v-model="email"/>
+					</label>
+			    </li>
+			    <li class="flex-horizontal m-w-all m-list-l">
+			    	<span class="m-content">
+						<input id="code" type="text" placeholder="请输入验证码" v-model="verCode"/>
+					</span>
+					<span class="m-content-r-btn" @click="getCode()" v-text="btnText"></span>
+			    </li>
+			    <li class="user-btn-list">
+					<span class="user-btn p-btn" @click="bindEmail" v-text="getText('bd3')"></span>
+				</li>
+			</ul>
+			<ul class="m-list" v-else="">
+			    <li class="flex-horizontal m-w-all m-bind" v-text="getText('be4')+email"></li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/jquery-3.2.1.min.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+			email:'',
+			verCode:'',
+			isBindEmail:false,
+			btnText:'获取验证码',
+			btnType:1
+		},
+		methods: {
+			init: function() {
+				this.languageType=Language.getLanguageType();
+				this.btnText=this.getText('bd1');
+				$('#email').attr('placeholder',vm.getText('be2'));
+				$('#code').attr('placeholder',vm.getText('bd4'));
+				vm.email=Tools.getLocal('userEmail');
+				vm.isBindEmail=ToolCheck.isDefine(vm.email);
+			},
+			getCode:function(){
+				var check=ToolCheck.isEmail(vm.email);
+				if(check.type){
+					//获取验证码使能
+					if(vm.btnType){
+						var nameSpace='msg/email/code';
+						var serviceData={
+							email:vm.email
+						}
+						ToolWebRequests.ajaxPost(nameSpace,serviceData,this.getCodeCallback);
+						settime();
+					}
+				}else{
+					Tools.alertFormat(vm.languageType,check);
+//					alert(check.msg);
+				}
+			},
+			getCodeCallback:function(status,res){
+				if(status){
+//					settime();
+				}
+			},
+			bindEmail:function(){
+				var check=ToolCheck.isEmail(vm.email);
+				if(check.type){
+					if(ToolCheck.isDefine(vm.verCode)){
+						var nameSpace='user/bind/email';
+						var serviceData={
+							"email":vm.email,
+							"msgCode":vm.verCode
+						}
+						ToolUI.openProgress(vm.getText('binding'));
+						ToolWebRequests.ajaxPost(nameSpace,serviceData,this.bindEmailCallback);
+					}else{
+						Tools.alertFormat(null,vm.getText('bd4'));
+//						alert(vm.getText('bd4'));
+					}
+				}else{
+					Tools.alertFormat(vm.languageType,check);
+//					alert(check.msg)
+				}
+			},
+			bindEmailCallback:function(status,res){
+				ToolUI.closeProgress();
+				if(status){
+					Tools.setLocal('userEmail',vm.email);
+					vm.init();
+				}else{
+					Tools.alertFormat(vm.languageType,res);
+//					alert(res.msg);
+				}
+			},
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		//设置沉浸式菜单栏
+		ToolUI.setHeader();
+		vm.init();	
+	};
+	var countdown=60;
+	settime=function() {
+		if (countdown == 0) {
+			vm.btnText=vm.getText('bd1');
+			vm.btnType=1;
+			countdown=60;
+		} else { 
+			vm.btnText=vm.getText('bd2')+'(' + countdown + ')'; 
+			vm.btnType=0;
+			countdown--; 
+			setTimeout(function() { 
+				settime() 
+			},1000)
+		}
+	}
+	document.body.addEventListener('touchstart', function () {}); 
+</script>
+
+</html>

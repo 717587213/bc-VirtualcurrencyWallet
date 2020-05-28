@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>选择提现方式</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/financialCenter/chooseCashed.css"/>
+</head>
+<body>
+	<div id="app">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('wPF')"></div>
+		</header>
+		<div class="aui-content flex-con flex-overflow">
+			<ul class="m-list">
+			    <li class="m-list-l m-t-75" @click="openWin(0)">
+			        <label class="m-w-all m-t" v-text="getText('wc1')"></label>
+			        <label class="m-w-all m-b"><font v-text="getText('wcp1')"></font><font class="m-b-f" v-text="getText('wcp11')"></font></label>
+			    </li>
+			    <li class="m-list-l" @click="openWin(1)">
+			        <label class="m-w-all m-t" v-text="getText('wc2')"></label>
+			        <label class="m-w-all m-b"><font v-text="getText('wcp2')"></font><font class="m-b-f" v-text="getText('wcp21')"></font></label>
+			    </li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:''
+		},
+		methods: {
+			getText:function(key){
+				var lt=this.languageType;
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			openWin:function(type){
+				var url='cashed';
+	        	var params={
+		        	type:type
+		        }
+	        	ToolWin.openWin(url,params);
+			},
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		},
+	});
+	apiready = function() {
+		ToolUI.setHeader();
+		vm.languageType=Language.getLanguageType();
+	};
+
+</script>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>关于我们</title>
+	<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/public.css"/>
+</head>
+<style>
+	.aui-content{
+		background: #F5F5F5;
+	}
+	.ac{
+		margin-top: 1.5rem;
+		color: #596060;
+		font-size: 0.65rem;
+		font-family: "PingFangSC-Ultralight,sans-serif";
+		text-align: left;
+		text-indent:1.25rem;
+		padding:0 1.25rem;
+	}
+	.ac p{
+		color: #596060;
+		font-size: 0.65rem;
+		font-family: "PingFangSC-Ultralight,sans-serif";
+	}
+</style>
+<body>
+	<div id="app" class="flex-vertical">
+		<header class="aui-bar aui-bar-nav">
+			<a class="aui-pull-left" @click="closeWin">
+				<span class="aui-iconfont aui-icon-left"></span>
+			</a>
+			<div class="aui-title" v-text="getText('at')"></div>
+		</header>
+		<div class="aui-content flex-con flex-overflow">
+			<label  class="ac" v-if="languageType=='CN'">
+				<p>关于我们：</p>
+				<p>NFT新金融产业链是一个去中心化的大数据信用评级网络，金融机构、银行系统一年的坏账率非常高；利用区块链的不可篡改，链上的用户征信系统，不管是机构还是用户都有自己评分，机构通过链上的识别，决定是否给用户授信金融额度、贷款、房贷、车贷等服务；这样子可以降低70%的坏账率；真正做到把钱给到有需要的企业、个人。</p>
+				<br />
+				<p>一、NFT理财APP独特优势。</p>
+				<p>1.存币理财，颠覆理财观念。</p>
+				<p>注册NFT理财APP账号就像在支付宝注册，存入的NFT资产与支付宝存款一样：存币有算力、每日复利，这是存款理财的理念，而不是投资市面上其他理财产品的理念。</p>
+				<p>2. 安全可靠。</p>
+				<p>NFT去中心化，开源代码，恒量发行，技术领先；不会被任何个人、机构、政府控制。</p>
+				<p>3. 多渠道高收益。</p>
+				<p>1)    持币收益（存币收益）：存币算力，复利滚存。</p>
+				<p>2)    浮动收益（价格收益）：NFT除了自身的持续稳定算力产币外，价格还持续上涨。用户群的不断扩大和应用领域的不断开发，市场普遍看好NFT资产的未来，NFT市场价格也会合理上涨。</p>
+				<p>3)    分享收益（社区收益）：NFT理财APP分享，在不损害、不分配新朋友任何利益的情况下，定期为我们算力增加NFT。</p>
+				<p>4)    便捷透明，易用性强：</p>
+				<p>NFT用户理财APP可以直接下载到自己手机，随时掌握自己的资产状况。</p>
+				<br />
+				<p>二、NFT理财APP简要操作：</p>
+				<p>第一步注册：在NFT理财APP和交易平台分别注册一个账户。</p>
+				<p>第二步买币：在交易平台购买NFT资产，选择相应的存币方案转入NFT理财APP里，即可每日产生算力，币币生息。</p>
+				<p>第三步卖币：将在NFT理财APP里的NFT资产转入交易平台卖出。</p>
+			</label>
+			<label  class="ac" v-if="languageType=='EN'">
+				<p>About us：</p>
+				<p>NFT New financial industry chain is a decentralized big data credit rating network, Usually financial institutions and banking systems have very high bad debt rate every year; They can reduce the bad debt rate by 70% because of the unchangeable characteristics of blockchain, and checking of users' credit information on the chain, no matter they are institutions or Users, they have their own rating, thus the organization can determine whether to give users credit line of loans, mortgages, car loans and other services like that; This way the cay benefit the enterprises or person in need.</p>
+				<br />
+				<p>Frist, The unique advantages of NFT financial management APP.</p>
+				<p>1. Token money management, change the concept of financial management.</p>
+				<p>Registering NFT APP account is similar with registering in Alipay. Deposited NFT assets is like Alipay deposits: There is hashing powers and daily compounding  interest of deposits, which is the concept of deposit financing, different from the other investment products on the market.</p>
+				<p>2. Safe and reliable.</p>
+				<p>NFT is decentralized, open source code, constant distribution, and leading technology; it will not be controlled by any individual, institution or government.</p>
+				<p>3. Multi-channel high profit.</p>
+				<p>1) Holding token profit (deposited token profit): Hash power profit for the  deposit and also compound token profit accumulated. </p>
+				<p>2) Floating profit (price gains): In addition to its own consistent and stable hashing power tokens, NFT continues to rise in price. With the continuous expansion of user groups and continuous development of application areas,  The future of NFT assets will get more promising, and the market price of NFT will also rise reasonably.</p>
+				<p>3) Sharing Earnings (Community Income): Sharing of NFT's money management apps regularly increases NFT for us without harming or affecting benefits of new friends.</p>
+				<p>4) Convenient and transparent, easy to use.</p>
+				<p>The NFT User Finance App can be downloaded directly to your mobile phone and you can keep track of your own assets.</p>
+				<br />
+				<p>Second, easy operation of NFT financial management APP .</p>
+				<p>First step is registration: Register an account on NFT Financial App and exchange Platform.</p>
+				<p>The second step is to buy token: purchase NFT assets on the exchange platform, select the appropriate deposit plan and transfer it to NFT Financial App, which can generate daily hash power and accumulated token interest.</p>
+				<p>The third step is selling token, transfer NFT assets in the NFT Financial App to the exchange platform to sell.</p>
+			</label>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/language.js" ></script>
+<script type="text/javascript" src="../../script/tools.js"></script>
+<script type="text/javascript" src="../../script/vue.js"></script>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			languageType:'CN',
+		},
+		methods: {
+			init: function() {
+				//设置沉浸式菜单栏
+				ToolUI.setHeader();
+				//获取语言类型
+				this.languageType=Language.getLanguageType();
+			},
+			
+			//将获取的getLanguageType();赋值给this.data.languageType  
+			//再将this.data.languageType与页面的v-if做判断控制中英文显示与隐藏。
+			getText:function(key){
+				//初始化lt等于this.data.languageType
+				var lt=this.languageType;
+				//
+				if(lt=="CN"){
+					return languageCN[key];
+				}else if(lt=="EN"){
+					return languageEN[key];
+				}else{
+					return languageCN[key];
+				}
+			},
+			//点击header上的返回按钮，返回
+			closeWin:function(){
+				ToolWin.closeWin();
+			}
+		}
+	});
+	apiready = function() {
+		vm.init();
+	};
+</script>
+
+</html>
